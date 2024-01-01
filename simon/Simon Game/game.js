@@ -8,7 +8,7 @@ var gameStarted = false;
 
 
 
-$(document).keypress(function() {
+$(document).keydown(function() {
     if (gameStarted === false) {
   
       $("#level-title").text("Level " + level);
