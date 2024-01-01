@@ -11,7 +11,8 @@ body {
 }
 
 #hiddenInput {
-  visibility: hidden;
+  overflow: hidden;
+  height: 0px;
 }
 
 #openKeyboard {
