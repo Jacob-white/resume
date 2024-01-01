@@ -5,20 +5,21 @@ body {
 
 #level-title {
   font-family: 'Press Start 2P', cursive;
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin:  5%;
   color: #FEF2BF;
 }
 
-#hiddenInput {
-  display: hidden;
-}
 
-#openKeyboard {
+#startGameButton {
+  margin-top: 5%;
   font-family: 'Press Start 2P', cursive;
   text-align: center;
-  background-color: aliceblue;
-  border-radius: 15%;
+  background-color: #FEF2BF;
+  border-radius: 100%;
+  height: 50px;
+  width: 200px;
+  border: 5px solid black;
 }
 
 .container {
@@ -29,11 +30,11 @@ body {
 }
 
 .btn {
-  margin: 25px;
+  margin: 10px;
   display: inline-block;
   height: 150px;
   width: 150px;
-  border: 10px solid black;
+  border: 5px solid black;
   border-radius: 50%;
 }
 

@@ -8,7 +8,16 @@ var gameStarted = false;
 
 
 
-$(document).keydown(function() {
+// $(document).keydown(function() {
+//     if (gameStarted === false) {
+  
+//       $("#level-title").text("Level " + level);
+//       nextSequence();
+//       gameStarted = true;
+//     }
+//   });
+
+  $("#startGameButton").click(function() {
     if (gameStarted === false) {
   
       $("#level-title").text("Level " + level);
@@ -18,6 +27,7 @@ $(document).keydown(function() {
   });
 
   $(".btn").click(storeUserSelection);
+
 
 
 
@@ -71,7 +81,8 @@ function checkAnswer(currentLevel) {
         setTimeout(function() {
             $("body").removeClass("game-over")
         }, 200);
-        $("#level-title").text("Game Over You Made It To Level: " + (level - 1) + " Press Any Key To Restart");
+        $("#level-title").text("Game Over You Made It To Level: " + (level - 1));
+        $("#startGameButton").text("Try Again?");
         startOver();
     }
 }
@@ -84,8 +95,13 @@ function startOver() {
 
 
 document.getElementById('openKeyboard').addEventListener('click', function(){
-    var inputElement = document.getElementById('hiddenInput');
-    inputElement.style.visibility = 'visible'; // unhide the input
-    inputElement.focus(); // focus on it so keyboard pops
-    inputElement.style.visibility = 'hidden'; // hide it again
+    document.getElementById('openKeyboard').dispatchEvent(new KeyboardEvent("keydown", {
+        key: "e",
+        keyCode: 69, // example values.
+        code: "KeyE", // put everything you need in this object.
+        which: 69,
+        shiftKey: false, // you don't need to include values
+        ctrlKey: false,  // if you aren't going to use them.
+        metaKey: false   // these are here for example's sake.
+    }));
 });
