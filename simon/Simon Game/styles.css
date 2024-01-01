@@ -10,6 +10,17 @@ body {
   color: #FEF2BF;
 }
 
+#hiddenInput {
+  visibility: hidden;
+}
+
+#openKeyboard {
+  font-family: 'Press Start 2P', cursive;
+  text-align: center;
+  background-color: aliceblue;
+  border-radius: 15%;
+}
+
 .container {
   display: block;
   width: 80%;
