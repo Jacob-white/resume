@@ -4,7 +4,7 @@ Kalamazoo, MI, USA | (269)-290-5497 | jacob.samuel.white@gmail.com | [https://ja
 
 ## Summary
 
-Dynamic Business Analyst with 5+ years of experience bridging complex technical challenges with tangible business outcomes in Asset Management/FinTech. Expert in leveraging data-driven solutions, SQL, and Python to build, design, and optimize client services through strategic technical requirements, robust platform enhancements, and continuous process improvement.
+Dynamic Solutions Analyst with 5+ years of experience bridging complex technical challenges with tangible business outcomes in Asset Management/FinTech. Expert in leveraging data-driven solutions, SQL, and Python to build, design, and optimize client services through strategic technical requirements, robust platform enhancements, and continuous process improvement.
 
 ## Skills
 
@@ -14,9 +14,7 @@ Dynamic Business Analyst with 5+ years of experience bridging complex technical 
 
 ## Experience
 
-*   **Business Analyst** | Synfinii (formerly SalesPage Technologies)| Oct 2025 – Present
-
-*   **Solutions Analyst** | Synfinii (formerly SalesPage Technologies)| 2019 – Oct 2025
+*   **Solutions Analyst** | Synfinii (formerly SalesPage Technologies)| 2019 – Present
     *   Engineered and implemented data-driven solutions for asset managers, enhancing sales and marketing strategies and achieving 50% improvement in key performance indicators.
     *   Authored comprehensive technical requirements and specifications, accelerating the development of 50+ new features and platform enhancements, resulting in a 150% faster delivery.
     *   Orchestrated the successful upgrade of 6 clients to the latest Synfinii releases, realizing 100% increase in platform value utilization.
