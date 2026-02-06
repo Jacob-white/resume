@@ -15,6 +15,8 @@
     0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg:
     0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Spacing */
   --space-xs: 0.5rem;
@@ -75,6 +77,49 @@ a:hover {
   top: 0;
   z-index: 1000;
   transition: all 0.3s ease;
+}
+
+/* Utility Classes replacing inline styles */
+.logo-text {
+  color: var(--color-primary);
+}
+
+.btn-custom-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-custom-primary:hover {
+  background-color: #1a252f; /* Darker shade */
+  border-color: #1a252f;
+  color: var(--color-white);
+}
+
+.hero-subtitle {
+  color: var(--color-secondary);
+  letter-spacing: 2px;
+}
+
+.text-highlight {
+  color: var(--color-primary);
+}
+
+.bg-light-custom {
+  background-color: #f8f9fa;
+}
+
+.badge-highlight {
+  background-color: var(--color-secondary) !important;
+  color: black !important;
+}
+
+.border-top-secondary {
+  border-top-color: var(--color-secondary) !important;
+}
+
+.border-top-primary {
+  border-top-color: var(--color-primary) !important;
 }
 
 /* Specific Section Styles */
@@ -153,7 +198,14 @@ a:hover {
 }
 
 /* Timeline/Experience */
+.timeline-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 .timeline-item {
+  list-style: none;
   position: relative;
   padding-left: 2rem;
   border-left: 2px solid #e9ecef;
@@ -171,6 +223,10 @@ a:hover {
   border-radius: 50%;
   background: var(--color-primary);
   border: 2px solid var(--color-white);
+}
+
+.timeline-item ul {
+  font-size: 0.95rem;
 }
 
 /* Footer */
