@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Technical Business Analyst portfolio of Jake White. Expert in SQL, Python, and Data Strategy with experience in FinTech and Asset Management.">
   <title>Jake White - Business Analyst</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
@@ -34,7 +35,7 @@
 
         <div class="ms-lg-3 text-end">
           <a href="./pdf/Jacob%20White%20Resume.pdf" class="btn btn-outline-dark me-2 rounded-pill" target="_blank">
-            Download CV
+            Download CV (PDF)
           </a>
           <a href="mailto:jacob.samuel.white@gmail.com" class="btn btn-custom-primary rounded-pill">Contact</a>
         </div>
@@ -47,7 +48,7 @@
     <div class="container col-xxl-8 px-4 py-3">
       <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
         <div class="col-10 col-sm-8 col-lg-5 headshot-container mx-auto">
-          <img src="./images/Formal-Headshot.jpg" class="d-block mx-lg-auto img-fluid" alt="Headshot Image"
+          <img src="./images/Formal-Headshot.jpg" class="d-block mx-lg-auto img-fluid" alt="Headshot of Jake White" width="817" height="1225"
             loading="lazy" />
         </div>
         <div class="col-lg-6">
@@ -61,7 +62,7 @@
           <div class="d-grid gap-2 d-md-flex justify-content-md-start">
             <a href="#experience" class="btn btn-custom-primary btn-lg px-4 me-md-2 rounded-pill shadow-sm">View Experience</a>
             <a href="https://www.linkedin.com/in/jake-white-95606632/" target="_blank" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
-              <img src="./images/linkedin.svg" alt="" height="20" class="me-2 opacity-75"> LinkedIn
+              <img src="./images/linkedin.svg" alt="" width="20" height="20" class="me-2 opacity-75"> LinkedIn
             </a>
           </div>
         </div>
@@ -132,7 +133,7 @@
                 <div class="d-md-flex justify-content-between align-items-center mb-2">
                   <div class="d-flex align-items-center gap-3">
                      <div class="rounded p-2 bg-light">
-                        <img src="./images/salespage_technologies_logo.jpg" alt="Synfinii Logo" height="40" class="rounded">
+                        <img src="./images/salespage_technologies_logo.jpg" alt="Synfinii Logo" width="40" height="40" class="rounded">
                      </div>
                      <div>
                        <h3 class="h4 mb-0 fw-bold">Business Analyst</h3>
@@ -155,7 +156,7 @@
                 <div class="d-md-flex justify-content-between align-items-center mb-2">
                   <div class="d-flex align-items-center gap-3">
                      <div class="rounded p-2 bg-light">
-                        <img src="./images/salespage_technologies_logo.jpg" alt="Synfinii Logo" height="40" class="rounded">
+                        <img src="./images/salespage_technologies_logo.jpg" alt="Synfinii Logo" width="40" height="40" class="rounded">
                      </div>
                      <div>
                        <h3 class="h4 mb-0 fw-bold">Solutions Analyst</h3>
@@ -179,7 +180,7 @@
                 <div class="d-md-flex justify-content-between align-items-center mb-2">
                   <div class="d-flex align-items-center gap-3">
                      <div class="rounded p-2 bg-light">
-                        <img src="./images/salespage_technologies_logo.jpg" alt="Synfinii Logo" height="40" class="rounded">
+                        <img src="./images/salespage_technologies_logo.jpg" alt="Synfinii Logo" width="40" height="40" class="rounded">
                      </div>
                      <div>
                        <h3 class="h4 mb-0 fw-bold">Associate Solution Analyst</h3>
@@ -202,7 +203,7 @@
                 <div class="d-md-flex justify-content-between align-items-center mb-2">
                   <div class="d-flex align-items-center gap-3">
                      <div class="rounded p-2 bg-light">
-                        <img src="./images/westernmichu_logo.jpg" alt="WMU Logo" height="40" class="rounded">
+                        <img src="./images/westernmichu_logo.jpg" alt="WMU Logo" width="40" height="40" class="rounded">
                      </div>
                      <div>
                        <h3 class="h4 mb-0 fw-bold">Undergraduate Research Assistant</h3>
@@ -231,7 +232,7 @@
       <div class="row g-4">
         <div class="col-lg-6">
           <div class="modern-card d-flex align-items-center p-4">
-             <img src="./images/westernmichu_logo.jpg" alt="WMU Logo" width="80" class="me-4 rounded">
+             <img src="./images/westernmichu_logo.jpg" alt="WMU Logo" width="80" height="80" class="me-4 rounded">
              <div>
                 <h3 class="h5 fw-bold mb-1">Western Michigan University</h3>
                 <p class="text-muted mb-2">Kalamazoo, MI | April 2019</p>
@@ -290,9 +291,12 @@
   <!--Footer-->
   <footer class="text-center py-5">
     <div class="container">
-      <p class="mb-0 text-white-50">&copy; 2026 Jake White. All rights reserved.</p>
+      <p class="mb-0 text-white-50">&copy; <span id="current-year"></span> Jake White. All rights reserved.</p>
     </div>
   </footer>
 
+  <script>
+    document.getElementById("current-year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
