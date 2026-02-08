@@ -210,13 +210,18 @@ a:hover {
   padding-left: 2rem;
   border-left: 2px solid #e9ecef;
   border-radius: 0; /* Reset border radius for timeline items if needed */
+  padding-bottom: 5rem;
+}
+
+.timeline-item:last-child {
   padding-bottom: 2rem;
+  border-left-color: transparent;
 }
 
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: -6px;
+  left: -4px;
   top: 0;
   width: 10px;
   height: 10px;
