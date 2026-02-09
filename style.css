@@ -105,10 +105,6 @@ a:hover {
   color: var(--color-primary);
 }
 
-.bg-light-custom {
-  background-color: #f8f9fa;
-}
-
 .badge-highlight {
   background-color: var(--color-secondary) !important;
   color: black !important;
@@ -210,7 +206,13 @@ a:hover {
   padding-left: 2rem;
   border-left: 2px solid #e9ecef;
   border-radius: 0; /* Reset border radius for timeline items if needed */
-  padding-bottom: 5rem;
+  padding-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .timeline-item {
+    padding-bottom: 1.5rem;
+  }
 }
 
 .timeline-item:last-child {
@@ -221,7 +223,7 @@ a:hover {
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: -4px;
+  left: -6px;
   top: 0;
   width: 10px;
   height: 10px;
