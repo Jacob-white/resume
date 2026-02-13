@@ -64,14 +64,6 @@ a:hover {
 }
 
 /* Glassmorphism Classes */
-.glass-panel {
-  background: var(--color-glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--color-glass-border);
-  box-shadow: var(--shadow-lg);
-  border-radius: 16px;
-}
 
 .glass-nav {
   background: rgba(255, 255, 255, 0.85);
@@ -278,4 +270,10 @@ footer a:hover {
     text-decoration: none;
     color: black;
   }
+}
+
+
+/* Performance Optimization */
+#experience {
+  content-visibility: auto;
 }
