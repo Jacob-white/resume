@@ -41,7 +41,7 @@
           <a href="./pdf/Jacob%20White%20Resume.pdf" class="btn btn-outline-dark me-2 rounded-pill" target="_blank" rel="noopener noreferrer">
             Download CV (PDF)
           </a>
-          <a href="mailto:jacob.samuel.white@gmail.com" class="btn btn-custom-primary rounded-pill">Contact</a>
+          <a href="#" class="btn btn-custom-primary rounded-pill email-link" data-user="jacob.samuel.white" data-domain="gmail.com" aria-label="Send email to Jake White">Contact</a>
         </div>
       </div>
     </div>
@@ -52,8 +52,11 @@
     <div class="container col-xxl-8 px-4 py-3">
       <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
         <div class="col-10 col-sm-8 col-lg-5 headshot-container mx-auto">
-          <img src="./images/Formal-Headshot.jpg" class="d-block mx-lg-auto img-fluid" alt="Headshot of Jake White" width="817" height="1225"
-            fetchpriority="high" />
+          <picture>
+            <source srcset="./images/Formal-Headshot.webp" type="image/webp">
+            <img src="./images/Formal-Headshot.jpg" class="d-block mx-lg-auto img-fluid" alt="Headshot of Jake White" width="817" height="1225"
+              fetchpriority="high" />
+          </picture>
         </div>
         <div class="col-lg-6">
           <h5 class="text-uppercase fw-bold mb-3 hero-subtitle">Business Analyst</h5>
@@ -314,6 +317,16 @@
 
   <script>
     document.getElementById("current-year").textContent = new Date().getFullYear();
+
+    // Email obfuscation
+    document.addEventListener("DOMContentLoaded", function() {
+      const emailLinks = document.querySelectorAll(".email-link");
+      emailLinks.forEach(link => {
+          const user = link.getAttribute("data-user");
+          const domain = link.getAttribute("data-domain");
+          link.href = "mailto:" + user + "@" + domain;
+      });
+    });
   </script>
 </body>
 </html>
