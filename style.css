@@ -217,15 +217,18 @@ a:hover {
   padding-bottom: 3rem;
 }
 
+.timeline-item:last-child {
+  padding-bottom: 2rem;
+  border-left-color: transparent;
+}
+
 @media (max-width: 768px) {
   .timeline-item {
     padding-bottom: 1.5rem;
   }
-}
-
-.timeline-item:last-child {
-  padding-bottom: 2rem;
-  border-left-color: transparent;
+  .timeline-item:last-child {
+    padding-bottom: 1.5rem;
+  }
 }
 
 .timeline-item::before {
