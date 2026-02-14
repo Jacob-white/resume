@@ -1,4 +1,4 @@
-import os
+import pathlib
 import sys
 from playwright.sync_api import sync_playwright
 
@@ -7,12 +7,24 @@ def test_headshot():
         browser = p.chromium.launch()
         page = browser.new_page()
 
-        # Determine the absolute path to index.html
-        cwd = os.getcwd()
-        file_path = f"file://{cwd}/index.html"
+        # Determine the absolute path to index.html using pathlib
+        # Assuming script is run from repo root or its own directory
+        # The original script assumed cwd was repo root.
+        # We will make it robust relative to the script location.
+        script_dir = pathlib.Path(__file__).parent.resolve()
+        # If script is in verification/, index.html is in parent
+        # If script is in root (not likely based on path), logic adjusts
+        repo_root = script_dir.parent
+        index_path = repo_root / "index.html"
 
-        print(f"Navigating to {file_path}")
-        page.goto(file_path)
+        if not index_path.exists():
+             print(f"Error: index.html not found at {index_path}")
+             sys.exit(1)
+
+        file_uri = index_path.as_uri()
+
+        print(f"Navigating to {file_uri}")
+        page.goto(file_uri)
 
         # Locate the headshot image
         image_selector = ".headshot-container img"
