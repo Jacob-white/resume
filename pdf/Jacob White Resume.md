@@ -23,6 +23,8 @@ Technical Business Analyst with over 6 years of experience in the FinTech and As
 * **Systems Architecture:** Architected the **Synfinii Delivery Service definitions**, standardizing technical onboarding for **internal team members** and improving service consistency across the Synfinii platform.  
 * **AI Strategy:** Integrating Generative AI workflows to streamline requirements gathering and enhance research for complex client solutioning.
 
+### **SalesPage Technologies | Kalamazoo, MI**
+
 **Solutions Analyst** | *January 2023 – November 2025*
 
 * **Technical Scoping:** Authored comprehensive specifications for **50+ platform features**, accelerating the development cycle by **150%** through rigorous requirement gathering.  
@@ -41,15 +43,15 @@ Technical Business Analyst with over 6 years of experience in the FinTech and As
 **Undergraduate Research Assistant** | *2017 – 2019*
 
 * **Data Integrity:** Operated a particle accelerator and resolved complex technical issues with apparatus, ensuring **99.9% data integrity** for experimental outputs.  
-* **Scientific Protocol:** Designed crystal growth protocols and programmed specialized furnaces for superconductivity testing, focusing on Lead-Sulfide crystals.
+* **Scientific Protocol:** Designed crystal growth protocols and programmed specialized furnaces for superconductivity testing, focusing on Lead Sulfide crystals.
 
 ## **KEY TECHNICAL PROJECTS**
 
 * **Data Quality Check Platform:** Engineered a GCP-based platform using advanced SQL to enforce 50+ business rules, reducing client database errors by **92%**.  
-* **Hobby Tracker (In Development):** Building a modular application using **Django, PostgreSQL, and Docker** to track collaborative hobby milestones with friends using an object-oriented approach.
+* **Hobby Habbit (Hobby Tracker):** Building a modular application using **Django, PostgreSQL, and Docker** to track collaborative hobby milestones with friends using an object-oriented approach. [Visit Site](https://hobbyhabbit.com)
 
 ## **EDUCATION & CERTIFICATIONS**
 
-* **Bachelor of Science, Physics** | Western Michigan University  
-* **Bachelor of Science, Applied Mathematics** | Western Michigan University  
+* **Bachelor of Science, Physics** | Western Michigan University (April 2019)
+* **Bachelor of Science, Applied Mathematics** | Western Michigan University (April 2019)
 * **Certifications:** Gen AI: Navigate the Landscape, Introduction to AI, Client Needs and Software Requirements.
