@@ -4,7 +4,7 @@
   --color-primary: #2c3e50; /* Deep Slate Blue */
   --color-secondary: #e6b800; /* Gold Accent */
   --color-text-main: #1a1a1a;
-  --color-text-muted: #6c757d;
+  --color-text-muted: #495057; /* Darker gray for better contrast */
   --color-white: #ffffff;
   --color-glass-bg: rgba(255, 255, 255, 0.7);
   --color-glass-border: rgba(255, 255, 255, 0.5);
@@ -195,13 +195,12 @@ a:hover {
 
 /* Timeline/Experience */
 .timeline-list {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .timeline-item {
-  list-style: none;
   position: relative;
   padding-left: 2rem;
   border-left: 2px solid #e9ecef;
@@ -243,17 +242,6 @@ a:hover {
 footer {
   background-color: #2c3e50 !important; /* Overriding bootstrap bg-body-tertiary */
   color: var(--color-white);
-}
-
-footer a {
-  color: rgba(255, 255, 255, 0.8);
-  transition: all 0.2s ease;
-}
-
-footer a:hover {
-  color: var(--color-white);
-  text-decoration: none;
-  opacity: 1;
 }
 
 @media print {
