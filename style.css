@@ -2,6 +2,7 @@
   /* Color Palette - Premium & Modern */
   --color-bg-body: #f0f2f5;
   --color-primary: #2c3e50; /* Deep Slate Blue */
+  --color-primary-dark: #1a252f;
   --color-secondary: #e6b800; /* Gold Accent */
   --color-text-main: #1a1a1a;
   --color-text-muted: #6c757d;
@@ -88,8 +89,8 @@ a:hover {
 }
 
 .btn-custom-primary:hover {
-  background-color: #1a252f; /* Darker shade */
-  border-color: #1a252f;
+  background-color: var(--color-primary-dark); /* Darker shade */
+  border-color: var(--color-primary-dark);
   color: var(--color-white);
 }
 
