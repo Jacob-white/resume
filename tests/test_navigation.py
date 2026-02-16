@@ -86,5 +86,23 @@ class TestNavigation(unittest.TestCase):
         href = link.get_attribute('href')
         self.assertEqual(href, 'mailto:jacob.samuel.white@gmail.com')
 
+    def test_scrollspy(self):
+        """Verify that scrolling to a section updates the active nav link via Bootstrap ScrollSpy."""
+        # Experience section
+        section = '#experience'
+        # Corresponding nav link
+        nav_link = self.page.locator('nav a[href="#experience"]')
+
+        # Scroll to the section
+        self.page.locator(section).scroll_into_view_if_needed()
+
+        # Wait for ScrollSpy (debounce/throttle)
+        self.page.wait_for_timeout(1000)
+
+        # Check for 'active' class
+        # We need to re-fetch the attribute because it changes dynamically
+        classes = nav_link.get_attribute('class')
+        self.assertIn('active', classes, f"Nav link for {section} should be active after scrolling")
+
 if __name__ == '__main__':
     unittest.main()
