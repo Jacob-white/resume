@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';"
+    />
+    <meta
       name="description"
       content="Technical Business Analyst portfolio of Jake White. Expert in SQL, Python, and Data Strategy with experience in FinTech and Asset Management."
     />
@@ -362,18 +366,6 @@
       </div>
     </footer>
 
-    <script>
-      document.getElementById("current-year").textContent = new Date().getFullYear();
-
-      // Email obfuscation
-      document.addEventListener("DOMContentLoaded", function () {
-        const emailLinks = document.querySelectorAll(".email-link");
-        emailLinks.forEach((link) => {
-          const user = link.getAttribute("data-user");
-          const domain = link.getAttribute("data-domain");
-          link.href = "mailto:" + user + "@" + domain;
-        });
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
