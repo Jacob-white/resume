@@ -10,6 +10,10 @@
   --color-glass-bg: rgba(255, 255, 255, 0.7);
   --color-glass-border: rgba(255, 255, 255, 0.5);
 
+  /* Hero Gradient */
+  --color-hero-start: #e0eafc;
+  --color-hero-end: #cfdef3;
+
   /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
   --shadow-md:
@@ -121,7 +125,7 @@ a:hover {
 /* Hero Section */
 .hero-section {
   padding: var(--space-xl) 0;
-  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  background: linear-gradient(135deg, var(--color-hero-start) 0%, var(--color-hero-end) 100%);
 }
 
 .headshot-container img {
