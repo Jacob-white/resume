@@ -1,90 +1,56 @@
-import unittest
-import threading
+import pytest
+from playwright.sync_api import Page, expect
+import pathlib
 import os
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-from playwright.sync_api import sync_playwright
+import re
 
-class TestNavigation(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        # Determine project root (parent of tests directory)
-        cls.project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+@pytest.fixture
+def index_page(page: Page):
+    test_dir = pathlib.Path(__file__).parent.resolve()
+    repo_root = test_dir.parent
+    index_path = repo_root / "index.html"
+    page.goto(index_path.as_uri())
+    return page
 
-        # Custom handler to serve from project root
-        class ProjectRootHandler(SimpleHTTPRequestHandler):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, directory=cls.project_root, **kwargs)
+def test_internal_links(index_page: Page):
+    """Verify internal navigation links scroll to the correct section."""
+    links = {
+        'About': '#aboutme',
+        'Skills': '#skills',
+        'Experience': '#experience',
+        'Education': '#education',
+        'Projects': '#projects'
+    }
 
-        # Start server on port 0 (ephemeral)
-        cls.server = HTTPServer(('localhost', 0), ProjectRootHandler)
-        cls.port = cls.server.server_port
+    for text, selector in links.items():
+        # Click the link in the nav
+        # We target the link specifically in the nav to avoid footer links or others
+        nav_link = index_page.locator(f"#main-nav a.nav-link:has-text('{text}')")
 
-        cls.server_thread = threading.Thread(target=cls.server.serve_forever)
-        cls.server_thread.daemon = True
-        cls.server_thread.start()
+        # Ensure it's visible
+        expect(nav_link).to_be_visible()
 
-        # Start Playwright and Browser
-        cls.playwright = sync_playwright().start()
-        cls.browser = cls.playwright.chromium.launch()
+        nav_link.click()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.browser.close()
-        cls.playwright.stop()
-        cls.server.shutdown()
-        cls.server.server_close()
+        # Check URL hash using regex
+        expect(index_page).to_have_url(re.compile(f"{selector}$"))
 
-    def setUp(self):
-        self.context = self.browser.new_context()
-        self.page = self.context.new_page()
-        self.page.goto(f'http://localhost:{self.port}')
+        # Verify target section is visible
+        section = index_page.locator(selector)
+        expect(section).to_be_visible()
 
-    def tearDown(self):
-        self.context.close()
+def test_resume_link(index_page: Page):
+    """Verify the Resume download link points to the correct PDF."""
+    link = index_page.get_by_role("link", name="Download CV (PDF)")
+    expect(link).to_be_visible()
+    href = link.get_attribute('href')
+    assert 'pdf/Jacob%20White%20Resume.pdf' in href
 
-    def test_internal_links(self):
-        """Verify internal navigation links scroll to the correct section."""
-        links = {
-            'About': '#aboutme',
-            'Skills': '#skills',
-            'Experience': '#experience',
-            'Education': '#education',
-            'Projects': '#projects'
-        }
+def test_contact_email_obfuscation(index_page: Page):
+    """Verify the email obfuscation script generates the correct mailto link."""
+    # This tests that script.js is running correctly
+    link = index_page.locator('a.email-link').first
 
-        for text, selector in links.items():
-            with self.subTest(link=text):
-                # Ensure the link is clicked
-                self.page.click(f'nav >> text={text}')
-
-                # Verify URL update
-                self.page.wait_for_url(f'**/{selector}')
-
-                # Verify the target section is present
-                element = self.page.locator(selector)
-                self.assertTrue(element.count() > 0, f"Section {selector} not found")
-
-    def test_resume_link(self):
-        """Verify the Resume download link points to the correct PDF."""
-        link = self.page.locator('text=Download CV (PDF)')
-        self.assertTrue(link.is_visible())
-        href = link.get_attribute('href')
-        # Check against relative path or full URL
-        self.assertIn('pdf/Jacob%20White%20Resume.pdf', href)
-
-    def test_contact_email_obfuscation(self):
-        """Verify the email obfuscation script generates the correct mailto link."""
-        link = self.page.locator('a.email-link')
-        # Wait for the href attribute to be updated by JS
-        try:
-            link.wait_for(state="attached")
-            # Wait specifically for the href to start with mailto:
-            self.page.wait_for_function("document.querySelector('a.email-link').href.startsWith('mailto:')")
-        except Exception as e:
-            self.fail(f"Email link obfuscation failed or timed out: {e}")
-
-        href = link.get_attribute('href')
-        self.assertEqual(href, 'mailto:jacob.samuel.white@gmail.com')
-
-if __name__ == '__main__':
-    unittest.main()
+    # Check href attribute
+    # expect automatically waits/retries until assertion passes
+    expect(link).to_have_attribute('href', 'mailto:jacob.samuel.white@gmail.com')

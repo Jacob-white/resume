@@ -1,6 +1,6 @@
 # **JACOB WHITE**
 
-**Kalamazoo, MI, USA | (269)-290-5497 | jacob.samuel.white@gmail.com** [**LinkedIn**](https://www.linkedin.com/in/jake-white-95606632) **| [Portfolio](https://jacob-white.github.io/resume/)**
+**Kalamazoo, MI, USA | jacob.samuel.white@gmail.com** [**LinkedIn**](https://www.linkedin.com/in/jake-white-95606632) **| [Portfolio](https://jacob-white.github.io/resume/)**
 
 ## **PROFESSIONAL SUMMARY**
 
