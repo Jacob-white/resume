@@ -76,6 +76,12 @@ a:hover {
   transition: all 0.3s ease;
 }
 
+/* Navbar Active State */
+.nav-link.active {
+  color: var(--color-primary) !important;
+  font-weight: 700;
+}
+
 /* Utility Classes replacing inline styles */
 .logo-text {
   color: var(--color-primary);

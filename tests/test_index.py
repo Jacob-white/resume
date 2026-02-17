@@ -1,5 +1,5 @@
-import unittest
 import os
+import pytest
 from html.parser import HTMLParser
 
 class ValidatingParser(HTMLParser):
@@ -52,55 +52,54 @@ class ValidatingParser(HTMLParser):
         if self.in_title:
             self.title_content += data
 
-class TestIndexHTML(unittest.TestCase):
-    FILE_PATH = "index.html"
+@pytest.fixture
+def html_content():
+    file_path = "index.html"
+    assert os.path.exists(file_path), f"{file_path} does not exist"
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()
 
-    def setUp(self):
-        self.assertTrue(os.path.exists(self.FILE_PATH), f"{self.FILE_PATH} does not exist")
-        with open(self.FILE_PATH, "r", encoding="utf-8") as f:
-            self.content = f.read()
+@pytest.fixture
+def parsed_html(html_content):
+    parser = ValidatingParser()
+    try:
+        parser.feed(html_content)
+        parser.close()
+    except Exception as e:
+        pytest.fail(f"HTML parsing raised exception: {e}")
+    return parser
 
-        self.parser = ValidatingParser()
-        try:
-            self.parser.feed(self.content)
-            self.parser.close()
-        except Exception as e:
-            self.fail(f"HTML parsing raised exception: {e}")
+def test_file_not_empty(html_content):
+    """Test that the file is not empty."""
+    assert len(html_content) > 0, "File is empty"
 
-    def test_file_not_empty(self):
-        """Test that the file is not empty."""
-        self.assertTrue(len(self.content) > 0, "File is empty")
+def test_has_doctype(html_content):
+    """Test that the file starts with DOCTYPE."""
+    assert html_content.strip().startswith("<!DOCTYPE html>"), "Missing DOCTYPE"
 
-    def test_has_doctype(self):
-        """Test that the file starts with DOCTYPE."""
-        self.assertTrue(self.content.strip().startswith("<!DOCTYPE html>"), "Missing DOCTYPE")
+def test_valid_html_structure(parsed_html):
+    """Test that the HTML structure is valid (balanced tags)."""
+    if parsed_html.errors:
+        pytest.fail(f"HTML validation errors: {'; '.join(parsed_html.errors)}")
 
-    def test_valid_html_structure(self):
-        """Test that the HTML structure is valid (balanced tags)."""
-        if self.parser.errors:
-            self.fail(f"HTML validation errors: {'; '.join(self.parser.errors)}")
+    if parsed_html.stack:
+        pytest.fail(f"Unclosed tags: {', '.join(parsed_html.stack)}")
 
-        if self.parser.stack:
-            self.fail(f"Unclosed tags: {', '.join(self.parser.stack)}")
+def test_title_content(parsed_html):
+    """Test that the title is correct."""
+    expected_title = "Jake White - Business Analyst"
+    assert parsed_html.title_content == expected_title, \
+        f"Expected title '{expected_title}', got '{parsed_html.title_content}'"
 
-    def test_title_content(self):
-        """Test that the title is correct."""
-        expected_title = "Jake White - Business Analyst"
-        self.assertEqual(self.parser.title_content, expected_title,
-                         f"Expected title '{expected_title}', got '{self.parser.title_content}'")
-
-    def test_sections_exist(self):
-        """Test that key sections exist by ID."""
-        required_ids = [
-            'main-nav',
-            'aboutme',
-            'skills',
-            'experience',
-            'education',
-            'projects'
-        ]
-        missing_ids = [rid for rid in required_ids if rid not in self.parser.found_ids]
-        self.assertFalse(missing_ids, f"Missing section IDs: {', '.join(missing_ids)}")
-
-if __name__ == "__main__":
-    unittest.main()
+def test_sections_exist(parsed_html):
+    """Test that key sections exist by ID."""
+    required_ids = [
+        'main-nav',
+        'aboutme',
+        'skills',
+        'experience',
+        'education',
+        'projects'
+    ]
+    missing_ids = [rid for rid in required_ids if rid not in parsed_html.found_ids]
+    assert not missing_ids, f"Missing section IDs: {', '.join(missing_ids)}"

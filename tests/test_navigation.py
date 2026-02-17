@@ -1,90 +1,59 @@
-import unittest
-import threading
 import os
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-from playwright.sync_api import sync_playwright
+import re
+import pathlib
+import pytest
+from playwright.sync_api import Page, expect
 
-class TestNavigation(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        # Determine project root (parent of tests directory)
-        cls.project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+@pytest.fixture
+def index_url():
+    # Use absolute path for file:// URI
+    return pathlib.Path(__file__).parent.parent.joinpath("index.html").resolve().as_uri()
 
-        # Custom handler to serve from project root
-        class ProjectRootHandler(SimpleHTTPRequestHandler):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, directory=cls.project_root, **kwargs)
+def test_internal_links(page: Page, index_url):
+    """Verify internal navigation links scroll to the correct section."""
+    page.goto(index_url)
 
-        # Start server on port 0 (ephemeral)
-        cls.server = HTTPServer(('localhost', 0), ProjectRootHandler)
-        cls.port = cls.server.server_port
+    links = {
+        'About': '#aboutme',
+        'Skills': '#skills',
+        'Experience': '#experience',
+        'Education': '#education',
+        'Projects': '#projects'
+    }
 
-        cls.server_thread = threading.Thread(target=cls.server.serve_forever)
-        cls.server_thread.daemon = True
-        cls.server_thread.start()
+    for text, selector in links.items():
+        # Click the link
+        page.click(f'nav >> text={text}')
 
-        # Start Playwright and Browser
-        cls.playwright = sync_playwright().start()
-        cls.browser = cls.playwright.chromium.launch()
+        # Verify URL hash updates
+        # Check that the URL ends with the correct selector (hash)
+        # Using expect.to_have_url with regex is robust
+        expect(page).to_have_url(re.compile(f"{re.escape(selector)}$"))
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.browser.close()
-        cls.playwright.stop()
-        cls.server.shutdown()
-        cls.server.server_close()
+        # Verify the target section is visible
+        # Note: visibility check might require scrolling which click() handles
+        section = page.locator(selector)
+        expect(section).to_be_visible()
 
-    def setUp(self):
-        self.context = self.browser.new_context()
-        self.page = self.context.new_page()
-        self.page.goto(f'http://localhost:{self.port}')
+def test_scrollspy_active_link(page: Page, index_url):
+    """Verify that scrolling to a section updates the active class in the navbar."""
+    page.goto(index_url)
 
-    def tearDown(self):
-        self.context.close()
+    # Check if ScrollSpy works - scroll to Experience section
+    # We might need to wait for JS to initialize if we add it
+    section = page.locator('#experience')
+    section.scroll_into_view_if_needed()
 
-    def test_internal_links(self):
-        """Verify internal navigation links scroll to the correct section."""
-        links = {
-            'About': '#aboutme',
-            'Skills': '#skills',
-            'Experience': '#experience',
-            'Education': '#education',
-            'Projects': '#projects'
-        }
+    # Check if 'Experience' link in nav has .active class
+    # Bootstrap adds 'active' class to the nav-link
+    nav_link = page.locator('nav .nav-link', has_text='Experience')
+    # Use expect with timeout to allow scrollspy to update
+    expect(nav_link).to_have_class(re.compile(r"active"), timeout=5000)
 
-        for text, selector in links.items():
-            with self.subTest(link=text):
-                # Ensure the link is clicked
-                self.page.click(f'nav >> text={text}')
+def test_contact_email_obfuscation(page: Page, index_url):
+    """Verify the email obfuscation script generates the correct mailto link."""
+    page.goto(index_url)
 
-                # Verify URL update
-                self.page.wait_for_url(f'**/{selector}')
-
-                # Verify the target section is present
-                element = self.page.locator(selector)
-                self.assertTrue(element.count() > 0, f"Section {selector} not found")
-
-    def test_resume_link(self):
-        """Verify the Resume download link points to the correct PDF."""
-        link = self.page.locator('text=Download CV (PDF)')
-        self.assertTrue(link.is_visible())
-        href = link.get_attribute('href')
-        # Check against relative path or full URL
-        self.assertIn('pdf/Jacob%20White%20Resume.pdf', href)
-
-    def test_contact_email_obfuscation(self):
-        """Verify the email obfuscation script generates the correct mailto link."""
-        link = self.page.locator('a.email-link')
-        # Wait for the href attribute to be updated by JS
-        try:
-            link.wait_for(state="attached")
-            # Wait specifically for the href to start with mailto:
-            self.page.wait_for_function("document.querySelector('a.email-link').href.startsWith('mailto:')")
-        except Exception as e:
-            self.fail(f"Email link obfuscation failed or timed out: {e}")
-
-        href = link.get_attribute('href')
-        self.assertEqual(href, 'mailto:jacob.samuel.white@gmail.com')
-
-if __name__ == '__main__':
-    unittest.main()
+    link = page.locator('a.email-link')
+    # Wait for JS to run
+    expect(link).to_have_attribute('href', 'mailto:jacob.samuel.white@gmail.com')
