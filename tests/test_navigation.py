@@ -72,6 +72,13 @@ class TestNavigation(unittest.TestCase):
         # Check against relative path or full URL
         self.assertIn('pdf/Jacob%20White%20Resume.pdf', href)
 
+    def test_view_experience_aria_label(self):
+        """Verify that the View Experience button has the correct aria-label."""
+        button = self.page.locator('a[href="#experience"].btn-custom-primary')
+        self.assertTrue(button.is_visible(), "View Experience button not visible")
+        aria_label = button.get_attribute('aria-label')
+        self.assertEqual(aria_label, "View Experience Section", "Incorrect aria-label")
+
     def test_contact_email_obfuscation(self):
         """Verify the email obfuscation script generates the correct mailto link."""
         link = self.page.locator('a.email-link')

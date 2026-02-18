@@ -83,6 +83,10 @@ class TestIndexHTML(unittest.TestCase):
         if self.parser.stack:
             self.fail(f"Unclosed tags: {', '.join(self.parser.stack)}")
 
+    def test_script_js_tag_present(self):
+        """Test that script.js is included in the HTML."""
+        self.assertIn('<script src="script.js"></script>', self.content)
+
     def test_title_content(self):
         """Test that the title is correct."""
         expected_title = "Jake White - Business Analyst"
