@@ -11,7 +11,7 @@ Technical Business Analyst with over 6 years of experience in the FinTech and As
 * **Analysis & Methodology:** Technical Requirements Writing (PRDs/User Stories), Impact Analysis, Master Data Management (MDM), Process Optimization.  
 * **Data & Programming:** SQL (PostgreSQL, SQL Server), Python (Pandas, NumPy, Scripting), Database Design (Stored Procedures, Views), GCP, Alteryx.  
 * **Tools & Integrations:** Salesforce CRM, Git/GitHub, Docker, Django, Data Quality Tools.  
-* **Specialized Domain:** Asset Management Distribution Data, Entity Data (Discovery Data, FinTrx, AdvizorPro), Technical Service Definition.
+* **Specialized Domain:** Asset Management Distribution Data, Entity Data (Discovery Data, FINTRX, AdvizorPro), Technical Service Definition.
 
 ## **PROFESSIONAL EXPERIENCE**
 
@@ -28,7 +28,7 @@ Technical Business Analyst with over 6 years of experience in the FinTech and As
 **Solutions Analyst** | *January 2023 – November 2025*
 
 * **Technical Scoping:** Authored comprehensive specifications for **50+ platform features**, accelerating the development cycle by **150%** through rigorous requirement gathering.  
-* **Data Onboarding:** Collaborated with Asset Managers to integrate and leverage **Discovery Data, FinTrx, and AdvizorPro** client entity data for enhanced distribution strategies.  
+* **Data Onboarding:** Collaborated with Asset Managers to integrate and leverage **Discovery Data, FINTRX, and AdvizorPro** client entity data for enhanced distribution strategies.
 * **Process Automation:** Migrated 3 key clients to modern data sources, automating tracking and reducing manual operational effort by **89%**.  
 * **Performance:** Improved key performance indicators for sales and marketing strategies by **50%** through data-driven solutioning and technical audits.
 
