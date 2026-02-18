@@ -269,3 +269,8 @@ footer {
   content-visibility: auto;
   contain-intrinsic-size: 1px 1000px;
 }
+
+.nav-link.active {
+  color: var(--color-primary) !important;
+  font-weight: 700;
+}
