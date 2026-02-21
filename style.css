@@ -159,6 +159,10 @@ a:hover {
   border-color: rgba(0, 0, 0, 0.03);
 }
 
+.logo-img {
+  object-fit: contain;
+}
+
 /* Skills Tags */
 .skill-tag {
   display: inline-block;
@@ -228,7 +232,7 @@ a:hover {
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: -6px;
+  left: -4px;
   top: 0;
   width: 10px;
   height: 10px;
