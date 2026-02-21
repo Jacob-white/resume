@@ -140,6 +140,10 @@ a:hover {
   transform: scale(1.02);
 }
 
+.logo-img {
+  object-fit: contain;
+}
+
 /* Cards */
 .modern-card {
   background: var(--color-white);
@@ -228,7 +232,7 @@ a:hover {
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: -6px;
+  left: -4px;
   top: 0;
   width: 10px;
   height: 10px;

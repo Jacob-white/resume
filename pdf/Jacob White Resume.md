@@ -48,7 +48,7 @@ Technical Business Analyst with over 6 years of experience in the FinTech and As
 ## **KEY TECHNICAL PROJECTS**
 
 * **Data Quality Check Platform:** Engineered a GCP-based platform using advanced SQL to enforce 50+ business rules, reducing client database errors by **92%**.  
-* **Hobby Habbit (Hobby Tracker):** Building a modular application using **Django, PostgreSQL, and Docker** to track collaborative hobby milestones with friends using an object-oriented approach. [Visit Site](https://hobbyhabbit.com)
+* **Hobby Habit (Hobby Tracker):** Building a modular application using **Django, PostgreSQL, and Docker** to track collaborative hobby milestones with friends using an object-oriented approach. [Visit Site](https://hobbyhabit.com)
 
 ## **EDUCATION & CERTIFICATIONS**
 

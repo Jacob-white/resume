@@ -33,9 +33,9 @@ def check_timeline_alignment():
 
         print(f"Timeline Item ::before left: {style['left']}")
 
-        # Memory Requirement: The timeline dot marker (`.timeline-item::before`) requires a `left` offset of `-6px`
-        if style['left'] != "-6px":
-            print(f"Error: Expected .timeline-item::before left to be '-6px', but got '{style['left']}'")
+        # Memory Requirement: The timeline dot marker (`.timeline-item::before`) requires a `left` offset of `-4px`
+        if style['left'] != "-4px":
+            print(f"Error: Expected .timeline-item::before left to be '-4px', but got '{style['left']}'")
             sys.exit(1)
 
         print("Timeline alignment verification passed!")
