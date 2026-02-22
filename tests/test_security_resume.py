@@ -9,7 +9,7 @@ def test_resume_markdown_no_phone_number():
     # Get absolute path to the resume markdown file
     test_dir = pathlib.Path(__file__).parent.resolve()
     repo_root = test_dir.parent
-    resume_path = repo_root / "pdf" / "Jacob White Resume.md"
+    resume_path = repo_root / "pdf" / "Jacob-White-Resume.md"
 
     # Check if the file exists
     assert resume_path.exists(), f"Resume markdown file not found at {resume_path}"

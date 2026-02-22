@@ -70,7 +70,7 @@ class TestNavigation(unittest.TestCase):
         self.assertTrue(link.is_visible())
         href = link.get_attribute('href')
         # Check against relative path or full URL
-        self.assertIn('pdf/Jacob%20White%20Resume.pdf', href)
+        self.assertIn('pdf/Jacob-White-Resume.pdf', href)
 
     def test_view_experience_aria_label(self):
         """Verify that the View Experience button has the correct aria-label."""
