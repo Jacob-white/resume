@@ -274,3 +274,8 @@ footer {
   color: var(--color-primary) !important;
   font-weight: 700;
 }
+
+/* Logo Images */
+.logo-img {
+  object-fit: contain;
+}
