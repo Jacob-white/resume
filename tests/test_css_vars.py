@@ -2,7 +2,7 @@ import unittest
 import os
 import re
 
-class TestCSSVariables(unittest.TestCase):
+class TestCSSSource(unittest.TestCase):
     FILE_PATH = "style.css"
 
     def setUp(self):
@@ -27,6 +27,24 @@ class TestCSSVariables(unittest.TestCase):
         hero_styles = hero_section_match.group(1)
         self.assertIn("var(--color-hero-start)", hero_styles, ".hero-section does not use --color-hero-start")
         self.assertIn("var(--color-hero-end)", hero_styles, ".hero-section does not use --color-hero-end")
+
+    def test_print_media_query_present(self):
+        """Verify that the print media query is present in the CSS source."""
+        # Check for the basic @media print structure
+        # Use re.DOTALL to match across newlines
+        print_match = re.search(r"@media\s+print\s*\{", self.content)
+        self.assertIsNotNone(print_match, "@media print block missing from style.css")
+
+        # Optionally check for the specific block structure
+        # This is a bit fragile if formatting changes, but good for regression
+        # We can check for "display: none !important" inside a print block
+
+        # Extract the content of the media query
+        # This regex is a simplification and assumes balanced braces are not tricky (they can be)
+        # But for this simple file, we can just look for the block start and some content
+
+        # Check if nav, .btn, footer are hidden
+        self.assertRegex(self.content, r"@media\s+print\s*\{[^}]*display:\s*none\s*!important", "Print styles should hide elements")
 
 if __name__ == "__main__":
     unittest.main()

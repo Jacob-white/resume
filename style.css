@@ -257,9 +257,14 @@ footer {
     background-color: white;
     color: black;
   }
-  a {
+  a,
+  .text-dark {
     text-decoration: none;
-    color: black;
+    color: black !important;
+  }
+
+  .text-muted {
+    color: black !important;
   }
 }
 
