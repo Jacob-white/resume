@@ -72,6 +72,13 @@ class TestNavigation(unittest.TestCase):
         # Check against relative path or full URL
         self.assertIn('pdf/Jacob%20White%20Resume.pdf', href)
 
+    def test_view_experience_aria_label(self):
+        """Verify that the View Experience button has the correct aria-label."""
+        button = self.page.locator('a[href="#experience"].btn-custom-primary')
+        self.assertTrue(button.is_visible(), "View Experience button not visible")
+        aria_label = button.get_attribute('aria-label')
+        self.assertEqual(aria_label, "View Experience Section", "Incorrect aria-label")
+
     def test_contact_email_obfuscation(self):
         """Verify the email obfuscation script generates the correct mailto link."""
         link = self.page.locator('a.email-link')
@@ -85,6 +92,24 @@ class TestNavigation(unittest.TestCase):
 
         href = link.get_attribute('href')
         self.assertEqual(href, 'mailto:jacob.samuel.white@gmail.com')
+
+    def test_scrollspy(self):
+        """Verify that scrolling to a section updates the active nav link via Bootstrap ScrollSpy."""
+        # Experience section
+        section = '#experience'
+        # Corresponding nav link
+        nav_link = self.page.locator('nav a[href="#experience"]')
+
+        # Scroll to the section
+        self.page.locator(section).scroll_into_view_if_needed()
+
+        # Wait for ScrollSpy (debounce/throttle)
+        self.page.wait_for_timeout(1000)
+
+        # Check for 'active' class
+        # We need to re-fetch the attribute because it changes dynamically
+        classes = nav_link.get_attribute('class')
+        self.assertIn('active', classes, f"Nav link for {section} should be active after scrolling")
 
 if __name__ == '__main__':
     unittest.main()

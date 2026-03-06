@@ -2,12 +2,15 @@
   /* Color Palette - Premium & Modern */
   --color-bg-body: #f0f2f5;
   --color-primary: #2c3e50; /* Deep Slate Blue */
+  --color-primary-dark: #1a252f;
   --color-secondary: #e6b800; /* Gold Accent */
   --color-text-main: #1a1a1a;
-  --color-text-muted: #6c757d;
+  --color-text-muted: #495057; /* Darker gray for better contrast */
   --color-white: #ffffff;
-  --color-glass-bg: rgba(255, 255, 255, 0.7);
-  --color-glass-border: rgba(255, 255, 255, 0.5);
+
+  /* Hero Gradient */
+  --color-hero-start: #e0eafc;
+  --color-hero-end: #cfdef3;
 
   /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -88,8 +91,8 @@ a:hover {
 }
 
 .btn-custom-primary:hover {
-  background-color: #1a252f; /* Darker shade */
-  border-color: #1a252f;
+  background-color: var(--color-primary-dark); /* Darker shade */
+  border-color: var(--color-primary-dark);
   color: var(--color-white);
 }
 
@@ -120,7 +123,7 @@ a:hover {
 /* Hero Section */
 .hero-section {
   padding: var(--space-xl) 0;
-  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  background: linear-gradient(135deg, var(--color-hero-start) 0%, var(--color-hero-end) 100%);
 }
 
 .headshot-container img {
@@ -195,13 +198,12 @@ a:hover {
 
 /* Timeline/Experience */
 .timeline-list {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .timeline-item {
-  list-style: none;
   position: relative;
   padding-left: 2rem;
   border-left: 2px solid #e9ecef;
@@ -245,17 +247,6 @@ footer {
   color: var(--color-white);
 }
 
-footer a {
-  color: rgba(255, 255, 255, 0.8);
-  transition: all 0.2s ease;
-}
-
-footer a:hover {
-  color: var(--color-white);
-  text-decoration: none;
-  opacity: 1;
-}
-
 @media print {
   nav,
   .btn,
@@ -277,4 +268,9 @@ footer a:hover {
 #experience {
   content-visibility: auto;
   contain-intrinsic-size: 1px 1000px;
+}
+
+.nav-link.active {
+  color: var(--color-primary) !important;
+  font-weight: 700;
 }
