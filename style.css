@@ -228,7 +228,7 @@ a:hover {
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: -6px;
+  left: -4px;
   top: 0;
   width: 10px;
   height: 10px;
