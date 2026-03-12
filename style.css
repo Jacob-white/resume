@@ -228,13 +228,17 @@ a:hover {
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: -6px;
+  left: -4px;
   top: 0;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: var(--color-primary);
   border: 2px solid var(--color-white);
+}
+
+.logo-img {
+  object-fit: contain;
 }
 
 .timeline-item ul {

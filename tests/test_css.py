@@ -80,7 +80,7 @@ class TestCSS(unittest.TestCase):
             const before = window.getComputedStyle(el, '::before');
             return before.left;
         }""")
-        self.assertEqual(left_pos, '-6px', f"Expected ::before left: -6px, got {left_pos}")
+        self.assertEqual(left_pos, '-4px', f"Expected ::before left: -4px, got {left_pos}")
 
     def test_print_styles(self):
         """Verify print styles are correctly applied."""
