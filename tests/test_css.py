@@ -82,5 +82,42 @@ class TestCSS(unittest.TestCase):
         }""")
         self.assertEqual(left_pos, '-6px', f"Expected ::before left: -6px, got {left_pos}")
 
+    def test_print_styles(self):
+        """Verify print styles are correctly applied."""
+        # Emulate print media
+        self.page.emulate_media(media="print")
+
+        # Check hidden elements (nav, .btn, footer)
+        for selector in ['nav', '.btn', 'footer']:
+            # Check the first visible element if multiple exist, or just check the style rule
+            # Since display: none removes it from the render tree, we need to check computed style
+            # However, Playwright locator might not find it if it's hidden.
+            # We can use evaluate to find the element and check style.
+
+            # Locate elements. Note: if there are multiple .btn, check all or first.
+            count = self.page.locator(selector).count()
+            if count > 0:
+                display = self.page.locator(selector).first.evaluate("el => getComputedStyle(el).display")
+                self.assertEqual(display, 'none', f"Expected {selector} to be hidden in print, got {display}")
+
+        # Check body styles
+        body_bg = self.page.evaluate("getComputedStyle(document.body).backgroundColor")
+        body_color = self.page.evaluate("getComputedStyle(document.body).color")
+
+        # Browsers might return 'rgb(255, 255, 255)' or 'white' or 'rgba(0, 0, 0, 0)' if transparent/default
+        # The CSS explicitly sets it to white and black.
+        self.assertIn(body_bg, ['rgb(255, 255, 255)', 'white', '#ffffff'], f"Expected body background white, got {body_bg}")
+        self.assertIn(body_color, ['rgb(0, 0, 0)', 'black', '#000000'], f"Expected body color black, got {body_color}")
+
+        # Check anchor styles
+        # Find a link
+        link = self.page.locator('a').first
+        if link.count() > 0:
+            text_decoration = link.evaluate("el => getComputedStyle(el).textDecorationLine")
+            color = link.evaluate("el => getComputedStyle(el).color")
+
+            self.assertEqual(text_decoration, 'none', f"Expected link text-decoration none, got {text_decoration}")
+            self.assertIn(color, ['rgb(0, 0, 0)', 'black', '#000000'], f"Expected link color black, got {color}")
+
 if __name__ == '__main__':
     unittest.main()
