@@ -46,5 +46,17 @@ class TestTypos(unittest.TestCase):
         if "http" in content and "hobby" in content.lower():
             self.assertIn("https://hobbyhabit.com", content, "Missing correct URL 'https://hobbyhabit.com' in Jacob White Resume.md")
 
+    def test_resume_pdf_hobby_habit(self):
+        """Verify 'Hobby Habit' spelling in compiled Jacob White Resume.pdf."""
+        import subprocess
+        pdf_path = "pdf/Jacob White Resume.pdf"
+        if not os.path.exists(pdf_path):
+            self.fail(f"{pdf_path} not found.")
+        res = subprocess.run(["pdftotext", pdf_path, "-"], capture_output=True, text=True, check=True)
+        pdf_text = res.stdout
+        self.assertNotIn("Hobby Habbit", pdf_text, "Found typo 'Hobby Habbit' in Jacob White Resume.pdf")
+        self.assertIn("Hobby Habit", pdf_text, "Missing 'Hobby Habit' in Jacob White Resume.pdf")
+
+
 if __name__ == '__main__':
     unittest.main()
