@@ -88,6 +88,22 @@ class TestModernFeatures(unittest.TestCase):
         self.assertIn("Rust", data["knowsAbout"])
         self.assertIn("Master Data Management", data["knowsAbout"])
 
+    def test_synfinii_and_salespage_logos(self):
+        """Verify the Synfinii role uses synfinii_logo.png and SalesPage roles use salespage_technologies_logo.jpg."""
+        timeline_items = self.page.locator("#experience .timeline-item")
+        self.assertEqual(timeline_items.count(), 4)
+
+        synfinii_img = timeline_items.nth(0).locator("img.logo-img")
+        self.assertIn("synfinii_logo.png", synfinii_img.get_attribute("src"))
+        self.assertEqual(synfinii_img.get_attribute("alt"), "Synfinii Logo")
+        self.assertTrue(synfinii_img.evaluate("img => img.naturalWidth > 0"))
+
+        for idx in (1, 2):
+            sp_img = timeline_items.nth(idx).locator("img.logo-img")
+            self.assertIn("salespage_technologies_logo.jpg", sp_img.get_attribute("src"))
+            self.assertEqual(sp_img.get_attribute("alt"), "SalesPage Technologies Logo")
+            self.assertTrue(sp_img.evaluate("img => img.naturalWidth > 0"))
+
 
 if __name__ == "__main__":
     unittest.main()
