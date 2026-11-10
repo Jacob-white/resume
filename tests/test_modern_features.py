@@ -82,6 +82,11 @@ class TestModernFeatures(unittest.TestCase):
             projects_section.locator('a[aria-label="Launch Hobby Heroes App"]').get_attribute("href"),
             "/hobby-heroes/",
         )
+        self.assertEqual(
+            projects_section.locator('a[aria-label="View Hobby Heroes on GitHub"]').count(),
+            0,
+            "Hobby Heroes is a private repo and should not expose a public GitHub link",
+        )
 
     def test_accessibility_landmarks_and_json_ld(self):
         """Verify semantic landmarks, skip link, JSON-LD Person schema, and custom Bootstrap bundle."""
