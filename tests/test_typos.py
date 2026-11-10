@@ -21,7 +21,7 @@ class TestTypos(unittest.TestCase):
         self.assertIn("Hobby Habit", content, "Missing 'Hobby Habit' in index.html")
 
         # Check for correct live app launch path
-        self.assertIn('href="/login"', content, "Missing Hobby Habit launch link 'href=\"/login\"' in index.html")
+        self.assertIn('href="/hub"', content, "Missing Hobby Habit launch link 'href=\"/hub\"' in index.html")
 
     def test_resume_md_hobby_habit(self):
         """Verify 'Hobby Habit' spelling and URL in Jacob White Resume.md."""

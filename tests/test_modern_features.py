@@ -84,7 +84,7 @@ class TestModernFeatures(unittest.TestCase):
         )
         self.assertEqual(
             projects_section.locator('a[aria-label="Launch Hobby Habit App"]').get_attribute("href"),
-            "/login",
+            "/hub",
         )
         self.assertEqual(
             projects_section.locator('a[aria-label="Launch Hobby Heroes App"]').get_attribute("href"),
