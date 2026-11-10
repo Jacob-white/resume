@@ -100,17 +100,57 @@ class TestModernFeatures(unittest.TestCase):
             "Hobby Heroes is a private repo and should not expose a public GitHub link",
         )
 
-        # Verify Entity Standardizer Studio UI has all 4 interactive capability tabs
+        # Verify Entity Standardizer Studio UI has all 4 interactive capability tabs and readable layout/contrast
         studio_path = self.repo_root / "entity-standardizer" / "index.html"
         self.assertTrue(studio_path.exists())
+        self.page.set_viewport_size({"width": 1280, "height": 800})
         self.page.goto(studio_path.as_uri())
         self.assertEqual(self.page.locator(".studio-tab").count(), 4)
+        es_styles = self.page.evaluate(
+            """() => {
+            const hdr = getComputedStyle(document.querySelector('.studio-header'));
+            const title = getComputedStyle(document.querySelector('.studio-header h1'));
+            const activeTab = getComputedStyle(document.querySelector('.studio-tab.active'));
+            const input = getComputedStyle(document.querySelector('#addr-street1'));
+            const col5 = document.querySelector('#panel-address .col-lg-5').getBoundingClientRect();
+            const col7 = document.querySelector('#panel-address .col-lg-7').getBoundingClientRect();
+            return {
+                hdrBg: hdr.backgroundImage,
+                titleColor: title.color,
+                tabBg: activeTab.backgroundColor,
+                tabColor: activeTab.color,
+                inputBg: input.backgroundColor,
+                inputColor: input.color,
+                sideBySide: col7.left >= col5.right - 5
+            };
+        }"""
+        )
+        self.assertIn("linear-gradient", es_styles["hdrBg"])
+        self.assertNotEqual(es_styles["tabBg"], es_styles["tabColor"])
+        self.assertNotEqual(es_styles["inputBg"], es_styles["inputColor"])
+        self.assertTrue(es_styles["sideBySide"], "Entity Standardizer columns must sit side-by-side on desktop")
 
-        # Verify Hobby Habit Studio Showcase UI has all 3 interactive capability tabs
+        # Verify Hobby Habit Studio Showcase UI has all 3 interactive capability tabs and readable layout/contrast
         hh_studio_path = self.repo_root / "hobby-habit" / "index.html"
         self.assertTrue(hh_studio_path.exists())
         self.page.goto(hh_studio_path.as_uri())
         self.assertEqual(self.page.locator(".hh-tab").count(), 3)
+        hh_styles = self.page.evaluate(
+            """() => {
+            const backBtn = getComputedStyle(document.querySelector('.hh-header .btn-outline-light'));
+            const hubBtn = getComputedStyle(document.querySelector('#open-full-hub-btn'));
+            const kpis = Array.from(document.querySelectorAll('section[aria-label=\"Workspace Summary Metrics\"] > div')).map(el => el.getBoundingClientRect());
+            return {
+                backColor: backBtn.color,
+                hubBg: hubBtn.backgroundColor,
+                hubColor: hubBtn.color,
+                kpisSameRow: kpis.length === 4 && Math.abs(kpis[0].top - kpis[3].top) < 5
+            };
+        }"""
+        )
+        self.assertEqual(hh_styles["backColor"], "rgb(255, 255, 255)")
+        self.assertNotEqual(hh_styles["hubBg"], hh_styles["hubColor"])
+        self.assertTrue(hh_styles["kpisSameRow"], "Hobby Habit 4 KPI cards must sit in a single row on desktop")
 
     def test_accessibility_landmarks_and_json_ld(self):
         """Verify semantic landmarks, skip link, JSON-LD Person schema, and custom Bootstrap bundle."""

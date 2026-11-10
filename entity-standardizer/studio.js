@@ -294,20 +294,29 @@ async function runContactCrossHealing() {
       country: "US",
     };
     const data = await apiPost("/v1/contact", body, "contact-latency");
-    const actions = (data.cross_healing_actions || [])
-      .map(
-        (a) =>
-          `<div class="heal-badge"><strong>${esc(a.action_type || a.rule || "HEALED")}:</strong> ${esc(a.source_field)} &rarr; ${esc(a.target_field)} (${esc(a.reason || a.details || "Cross-pillar signal")})</div>`
-      )
-      .join("");
-
     const org = data.organization || {};
     const person = data.person || {};
     const title = data.job_title || {};
     const email = data.email || {};
     const phone = data.phone || {};
     const web = data.website || {};
+    const social = data.social || {};
     const addr = data.address || {};
+
+    const allHealBadges = [
+      ...(data.cross_healing_actions || []).map((a) =>
+        typeof a === "string"
+          ? `<span class="heal-badge"><strong>CROSS-PILLAR:</strong> ${esc(a)}</span>`
+          : `<span class="heal-badge"><strong>${esc(a.action_type || a.rule || "HEALED")}:</strong> ${esc(a.source_field)} &rarr; ${esc(a.target_field)}</span>`
+      ),
+      ...(person.healing_actions || []).map((a) => `<span class="heal-badge"><strong>PERSON:</strong> ${esc(a)}</span>`),
+      ...(title.healing_actions || []).map((a) => `<span class="heal-badge"><strong>TITLE:</strong> ${esc(a)}</span>`),
+      ...(org.healing_actions || []).map((a) => `<span class="heal-badge"><strong>ORG:</strong> ${esc(a)}</span>`),
+      ...(email.healing_actions || []).map((a) => `<span class="heal-badge"><strong>EMAIL:</strong> ${esc(a)}</span>`),
+      ...(web.healing_actions || []).map((a) => `<span class="heal-badge"><strong>WEB:</strong> ${esc(a)}</span>`),
+      ...(social.healing_actions || []).map((a) => `<span class="heal-badge"><strong>SOCIAL:</strong> ${esc(a)}</span>`),
+      ...(phone.healing_actions || []).map((a) => `<span class="heal-badge"><strong>PHONE:</strong> ${esc(a)}</span>`),
+    ].join(" ");
 
     out.innerHTML = `
       <div class="studio-hero-box">
@@ -317,17 +326,17 @@ async function runContactCrossHealing() {
         </div>
         <div class="fw-bold font-monospace small">${esc(data.entity_key)}</div>
       </div>
-      ${actions ? `<div><div class="small fw-bold text-muted mb-1">Cross-Healing Actions Triggered:</div>${actions}</div>` : ""}
+      ${allHealBadges ? `<div><div class="small fw-bold text-muted mb-1">Cross-Healing &amp; Pillar Repair Actions Triggered:</div><div class="d-flex flex-wrap gap-1">${allHealBadges}</div></div>` : ""}
       <div class="studio-kv-grid">
         ${kvCard("Person Canonical", person.full_name || person.canonical_name)}
         ${kvCard("Credentials / Honorific", [person.salutation, (person.credentials || []).join(", ")].filter(Boolean).join(" \u2022 "))}
-        ${kvCard("Job Title / Seniority", `${title.canonical_title || "\u2014"} (${title.seniority_level || "Standard"} / ${title.department || "General"})`)}
+        ${kvCard("Job Title / Seniority", `${title.normalized_title || title.canonical_title || "\u2014"} (${title.seniority_level || "Standard"} / ${title.department || "General"})`)}
         ${kvCard("Organization Legal Name", org.legal_name)}
         ${kvCard("Brand Stem / DBA", [org.brand_stem, org.dba_name ? `DBA: ${org.dba_name}` : ""].filter(Boolean).join(" \u2022 "))}
-        ${kvCard("Canonical Email", email.canonical_email)}
-        ${kvCard("Clean Website URL", web.canonical_url)}
+        ${kvCard("Canonical Email", email.email || email.canonical_email)}
+        ${kvCard("Clean Website URL", web.url || web.canonical_url)}
         ${kvCard("E.164 Phone + Ext", `${phone.e164 || "\u2014"}${phone.extension ? ` ext. ${phone.extension}` : ""}`)}
-        ${kvCard("Standardized Address", [addr.street1, addr.city, addr.state, addr.postal_code].filter(Boolean).join(", "))}
+        ${kvCard("Standardized Address", [addr.street1, addr.street2, addr.city, addr.state, addr.postal_code].filter(Boolean).join(", "))}
       </div>
       ${jsonDetails(data)}
     `;
@@ -356,7 +365,7 @@ async function runDeduplication() {
           ${kvCard("Company B Legal Name", data.company_b?.legal_name)}
           ${kvCard("Company A Brand Key", data.company_a?.brand_key)}
           ${kvCard("Company B Brand Key", data.company_b?.brand_key)}
-          ${kvCard("Company ADBA / Suffix", `${data.company_a?.legal_suffix || "\u2014"} / ${data.company_a?.dba_name || "\u2014"}`)}
+          ${kvCard("Company A DBA / Suffix", `${data.company_a?.legal_suffix || "\u2014"} / ${data.company_a?.dba_name || "\u2014"}`)}
           ${kvCard("Company B DBA / Suffix", `${data.company_b?.legal_suffix || "\u2014"} / ${data.company_b?.dba_name || "\u2014"}`)}
         </div>
         ${jsonDetails(data)}
@@ -411,10 +420,10 @@ async function runPhoneInspector() {
     const data = await apiPost("/v1/explain", body, "phone-latency");
     const rec = data.record || {};
     const intel = data.intelligence || {};
-    const steps = (data.explanation?.steps || data.explanation || []);
-    const stepsText = Array.isArray(steps)
-      ? steps.map((s) => (typeof s === "string" ? s : JSON.stringify(s))).join(" \u2192 ")
-      : JSON.stringify(steps);
+    const exp = data.explanation || {};
+    const healList = (exp.healing_actions || rec.healing_actions || []).join(", ") || "None";
+    const riskList = (exp.risk_flags || rec.risk_flags || []).join(", ") || "None";
+    const routingTier = exp.routing_tier || rec.routing_tier || "AUTO_PASS";
 
     out.innerHTML = `
       <div class="studio-hero-box">
@@ -423,14 +432,14 @@ async function runPhoneInspector() {
         <div class="small text-muted">International: <strong>${esc(rec.international)}</strong> \u2022 National: <strong>${esc(rec.national)}</strong> \u2022 RFC 3966: <code>${esc(rec.rfc3966)}</code></div>
       </div>
       <div class="studio-kv-grid">
-        ${kvCard("Validation Status", rec.is_valid ? "Valid" : "Invalid / Partial")}
-        ${kvCard("Country ISO / Code", `${rec.country_iso2 || "\u2014"} (+${rec.calling_code || "\u2014"})`)}
-        ${kvCard("Line Classification", intel.line_type || rec.number_type || "Standard")}
-        ${kvCard("Geographic Region", intel.region_name || intel.state_or_province || "\u2014")}
+        ${kvCard("Validation Status", rec.is_valid ? `Valid (${routingTier})` : "Invalid / Partial")}
+        ${kvCard("Country ISO / Code", `${rec.country_iso2 || "\u2014"} (+${rec.country_calling_code || rec.calling_code || "\u2014"})`)}
+        ${kvCard("Line Classification", rec.line_type || intel.line_type || "Standard")}
+        ${kvCard("Geographic Region", [intel.locality, rec.region_code].filter(Boolean).join(", ") || "\u2014")}
         ${kvCard("Time Zone", (intel.timezones || []).join(", ") || "\u2014")}
         ${kvCard("Confidence Score", rec.confidence !== undefined ? `${(Number(rec.confidence) * 100).toFixed(0)}%` : "\u2014")}
       </div>
-      <div class="small text-muted"><strong>Audit Trail:</strong> ${esc(stepsText)}</div>
+      <div class="small text-muted"><strong>Normalization Audit Trail:</strong> Healing Actions: <code>${esc(healList)}</code> \u2022 Risk Flags: <code>${esc(riskList)}</code></div>
       ${jsonDetails(data)}
     `;
   } catch (err) {

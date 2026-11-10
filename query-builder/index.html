@@ -41,6 +41,16 @@
         font-size: 0.75rem;
         font-weight: 600;
       }
+      /* Prevent top studio header items from overlapping on standard viewports */
+      header > div:first-child {
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      header [data-qb="connect-database-trigger"],
+      header button[title*="Federated Hub"],
+      header [aria-label="Quick query presets"] {
+        display: none !important;
+      }
     </style>
     <script src="/query-builder-shim.js"></script>
     <script type="module" crossorigin src="/query-builder/assets/index-pG1iivL5.js"></script>
