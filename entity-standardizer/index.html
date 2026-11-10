@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Interactive Entity Standardizer Studio — USPS Pub 28 / UPU S42 address standardization, 6-pillar contact cross-healing, entity resolution, and ITU-T E.164 telephony inspector."
+    />
+    <title>Entity Standardizer Studio — Interactive Playground</title>
+    <link rel="stylesheet" href="/bootstrap-custom.min.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/entity-standardizer/studio.css" />
+  </head>
+  <body>
+    <a href="#studio-main" class="skip-link">Skip to interactive studio</a>
+
+    <header class="studio-header">
+      <div class="container py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <a href="/" class="btn btn-sm btn-outline-light rounded-pill">&larr; Back to Portfolio</a>
+          <div>
+            <h1 class="h4 mb-0 fw-bold text-white">Entity Standardizer Studio</h1>
+            <p class="mb-0 small text-white opacity-75">
+              Zero-API-Cost Address, Contact, Organization &amp; Telephony Standardization Engine
+            </p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span id="engine-status-badge" class="badge rounded-pill studio-status-badge" role="status">
+            Checking Engine&hellip;
+          </span>
+          <a
+            href="https://github.com/Jacob-white/Entity-Standardizer"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-sm btn-outline-light rounded-pill"
+          >
+            GitHub Repo
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="studio-main" class="container py-4">
+      <!-- Navigation Tabs -->
+      <nav aria-label="Entity Standardizer Capabilities" class="mb-4">
+        <div class="studio-tabs" role="tablist">
+          <button
+            type="button"
+            class="studio-tab active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-address"
+            id="tab-address"
+            data-tab="address"
+          >
+            1. Address &amp; Autocomplete
+          </button>
+          <button
+            type="button"
+            class="studio-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-contact"
+            id="tab-contact"
+            data-tab="contact"
+          >
+            2. Contact Cross-Healing
+          </button>
+          <button
+            type="button"
+            class="studio-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-dedup"
+            id="tab-dedup"
+            data-tab="dedup"
+          >
+            3. Deduplication &amp; Fuzzy Match
+          </button>
+          <button
+            type="button"
+            class="studio-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-phone"
+            id="tab-phone"
+            data-tab="phone"
+          >
+            4. Phone &amp; Dial Plan Inspector
+          </button>
+        </div>
+      </nav>
+
+      <!-- TAB 1: ADDRESS STANDARDIZER & AUTOCOMPLETE -->
+      <section id="panel-address" class="studio-panel active" role="tabpanel" aria-labelledby="tab-address">
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">Address Input (USPS Pub 28 / UPU S42)</h2>
+                <span class="badge bg-light text-dark border">POST /v1/address</span>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Load Preset Scenario:</label>
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="addr-wall">
+                    Messy Wall St Suite
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="addr-cmra">
+                    CMRA / Private Mailbox
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="addr-pobox">
+                    PO Box + ZIP+4
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="addr-intl">
+                    UK International
+                  </button>
+                </div>
+              </div>
+
+              <form id="form-address" class="studio-form">
+                <div class="mb-2">
+                  <label for="addr-street1" class="form-label small fw-bold">Street Line 1</label>
+                  <input
+                    type="text"
+                    id="addr-street1"
+                    class="form-control"
+                    value="100 wall street ste 2400-b"
+                    placeholder="e.g. 100 wall street ste 2400-b"
+                  />
+                </div>
+                <div class="mb-2">
+                  <label for="addr-street2" class="form-label small fw-bold">Street Line 2 (Optional)</label>
+                  <input
+                    type="text"
+                    id="addr-street2"
+                    class="form-control"
+                    value="attn: institutional ops"
+                    placeholder="e.g. Apt 4B or Attention line"
+                  />
+                </div>
+                <div class="row g-2 mb-2">
+                  <div class="col-5">
+                    <label for="addr-city" class="form-label small fw-bold">City</label>
+                    <input type="text" id="addr-city" class="form-control" value="new york" />
+                  </div>
+                  <div class="col-3">
+                    <label for="addr-state" class="form-label small fw-bold">State</label>
+                    <input type="text" id="addr-state" class="form-control" value="New York" />
+                  </div>
+                  <div class="col-4">
+                    <label for="addr-zip" class="form-label small fw-bold">Postal Code</label>
+                    <input type="text" id="addr-zip" class="form-control" value="10005-0001" />
+                  </div>
+                </div>
+                <div class="row g-2 mb-3 align-items-end">
+                  <div class="col-4">
+                    <label for="addr-country" class="form-label small fw-bold">Country ISO</label>
+                    <input type="text" id="addr-country" class="form-control" value="US" />
+                  </div>
+                  <div class="col-8">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="addr-geocode" checked />
+                      <label class="form-check-label small" for="addr-geocode">
+                        Offline Rooftop / Centroid Geocoding + H3 Index
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-custom-primary rounded-pill w-100">
+                  Standardize &amp; Explain Address
+                </button>
+              </form>
+
+              <hr class="my-4" />
+
+              <h3 class="h6 fw-bold mb-2">Live Offline Address Autocomplete</h3>
+              <p class="small text-muted mb-2">
+                Type a street prefix (e.g. <code>100 WALL</code>, <code>1600 PENN</code>, <code>233 S WACKER</code>) to query offline reference data:
+              </p>
+              <div class="d-flex gap-2">
+                <input
+                  type="text"
+                  id="addr-autocomplete-input"
+                  class="form-control"
+                  value="100 WALL"
+                  aria-label="Address autocomplete prefix"
+                />
+                <button type="button" id="btn-autocomplete" class="btn btn-outline-dark rounded-pill px-3">
+                  Suggest
+                </button>
+              </div>
+              <div id="autocomplete-results" class="mt-2 small"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">Standardized Output &amp; Field Confidence</h2>
+                <span id="addr-latency" class="badge bg-light text-dark border">Ready</span>
+              </div>
+              <div id="address-output" class="studio-output-container" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: FULL CONTACT CROSS-HEALING -->
+      <section id="panel-contact" class="studio-panel" role="tabpanel" aria-labelledby="tab-contact" hidden>
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">6-Pillar Contact Cross-Healing</h2>
+                <span class="badge bg-light text-dark border">POST /v1/contact</span>
+              </div>
+              <p class="small text-muted mb-3">
+                Simultaneously normalizes Person, Job Title, Organization (ISO 20275 ELF), Email, URL/Social, Phone, and Address—using cross-field signals to repair missing or corrupted attributes.
+              </p>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Load Cross-Healing Scenario:</label>
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="contact-heal">
+                    Domain &rarr; Company Cross-Heal
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="contact-sec">
+                    SEC Filing + Executive Title
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="contact-swapped">
+                    Org in Person Field Repair
+                  </button>
+                </div>
+              </div>
+
+              <form id="form-contact" class="studio-form">
+                <div class="row g-2 mb-2">
+                  <div class="col-6">
+                    <label for="cnt-person" class="form-label small fw-bold">Person Name</label>
+                    <input type="text" id="cnt-person" class="form-control" value="Dr. Sarah J. Jenkins, CFA, PhD" />
+                  </div>
+                  <div class="col-6">
+                    <label for="cnt-title" class="form-label small fw-bold">Job Title</label>
+                    <input type="text" id="cnt-title" class="form-control" value="sr. managing dir - institutional sales" />
+                  </div>
+                </div>
+                <div class="mb-2">
+                  <label for="cnt-org" class="form-label small fw-bold">Organization (Leave blank to test domain inference)</label>
+                  <input
+                    type="text"
+                    id="cnt-org"
+                    class="form-control"
+                    value="THE VANGUARD GROUP, INC. /PA/ DBA VANGUARD INSTITUTIONAL"
+                  />
+                </div>
+                <div class="row g-2 mb-2">
+                  <div class="col-6">
+                    <label for="cnt-email" class="form-label small fw-bold">Email Address</label>
+                    <input type="text" id="cnt-email" class="form-control" value="Sarah.Jenkins+crm@vanguard.com" />
+                  </div>
+                  <div class="col-6">
+                    <label for="cnt-phone" class="form-label small fw-bold">Phone Number</label>
+                    <input type="text" id="cnt-phone" class="form-control" value="1 (610) 669-1000 ext. 882" />
+                  </div>
+                </div>
+                <div class="row g-2 mb-2">
+                  <div class="col-6">
+                    <label for="cnt-website" class="form-label small fw-bold">Website URL</label>
+                    <input
+                      type="text"
+                      id="cnt-website"
+                      class="form-control"
+                      value="HTTPS://Institutional.Vanguard.com/solutions?utm_source=linkedin&amp;fbclid=123"
+                    />
+                  </div>
+                  <div class="col-6">
+                    <label for="cnt-social" class="form-label small fw-bold">Social Profile</label>
+                    <input type="text" id="cnt-social" class="form-control" value="https://www.linkedin.com/in/sarah-jenkins-cfa/" />
+                  </div>
+                </div>
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <label for="cnt-street" class="form-label small fw-bold">Street Address</label>
+                    <input type="text" id="cnt-street" class="form-control" value="100 vanguard blvd bldg m3" />
+                  </div>
+                  <div class="col-3">
+                    <label for="cnt-city" class="form-label small fw-bold">City</label>
+                    <input type="text" id="cnt-city" class="form-control" value="malvern" />
+                  </div>
+                  <div class="col-3">
+                    <label for="cnt-state" class="form-label small fw-bold">State / ZIP</label>
+                    <input type="text" id="cnt-state" class="form-control" value="PA 19355" />
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-custom-primary rounded-pill w-100">
+                  Run 6-Pillar Cross-Healing
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">Cross-Healed Golden Record</h2>
+                <span id="contact-latency" class="badge bg-light text-dark border">Ready</span>
+              </div>
+              <div id="contact-output" class="studio-output-container" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: DEDUPLICATION & FUZZY COMPARISON -->
+      <section id="panel-dedup" class="studio-panel" role="tabpanel" aria-labelledby="tab-dedup" hidden>
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">Entity Resolution &amp; Clustering</h2>
+                <span class="badge bg-light text-dark border">Compare &amp; Cluster</span>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Select Resolution Mode:</label>
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="dedup-company-pair">
+                    Compare Companies (ISO 20275)
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="dedup-address-pair">
+                    Compare Addresses
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="dedup-contact-cluster">
+                    Cluster 4 Messy Contact Records
+                  </button>
+                </div>
+              </div>
+
+              <form id="form-dedup" class="studio-form">
+                <input type="hidden" id="dedup-mode" value="company-pair" />
+
+                <div id="dedup-pair-inputs">
+                  <div class="mb-2">
+                    <label for="dedup-entity-a" class="form-label small fw-bold">Entity A</label>
+                    <input
+                      type="text"
+                      id="dedup-entity-a"
+                      class="form-control"
+                      value="J.P. Morgan Investment Management Inc. /DE/"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="dedup-entity-b" class="form-label small fw-bold">Entity B</label>
+                    <input
+                      type="text"
+                      id="dedup-entity-b"
+                      class="form-control"
+                      value="JPMorgan Investment Mgmt, LLC DBA JPM Asset Management"
+                    />
+                  </div>
+                </div>
+
+                <div id="dedup-cluster-inputs" hidden>
+                  <div class="mb-3">
+                    <label for="dedup-records-json" class="form-label small fw-bold">
+                      Contact Records JSON Array (POST /v1/contact/cluster)
+                    </label>
+                    <textarea id="dedup-records-json" class="form-control font-monospace small" rows="10"></textarea>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-custom-primary rounded-pill w-100">
+                  Run Similarity &amp; Resolution Engine
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">Resolution Verdict &amp; Cluster Breakdown</h2>
+                <span id="dedup-latency" class="badge bg-light text-dark border">Ready</span>
+              </div>
+              <div id="dedup-output" class="studio-output-container" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: PHONE & INTERNATIONAL DIAL PLAN INSPECTOR -->
+      <section id="panel-phone" class="studio-panel" role="tabpanel" aria-labelledby="tab-phone" hidden>
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">ITU-T E.164 &amp; NANP Telephony</h2>
+                <span class="badge bg-light text-dark border">POST /v1/explain</span>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">Load Phone Preset:</label>
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="phone-us">
+                    US Manhattan + Ext
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="phone-uk">
+                    UK London (+44)
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="phone-vanity">
+                    Alphanumeric Vanity
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary preset-btn" data-preset="phone-de">
+                    Germany IDD (0049)
+                  </button>
+                </div>
+              </div>
+
+              <form id="form-phone" class="studio-form">
+                <div class="mb-2">
+                  <label for="phone-raw" class="form-label small fw-bold">Raw Telephone Input</label>
+                  <input
+                    type="text"
+                    id="phone-raw"
+                    class="form-control"
+                    value="+1 (212) 555-0199 ext. 402"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="phone-country" class="form-label small fw-bold">Default Country Hint (ISO-3166-1 alpha-2)</label>
+                  <input type="text" id="phone-country" class="form-control" value="US" />
+                </div>
+                <button type="submit" class="btn btn-custom-primary rounded-pill w-100">
+                  Standardize &amp; Explain Phone
+                </button>
+              </form>
+
+              <hr class="my-4" />
+
+              <h3 class="h6 fw-bold mb-2">249-Country Dial Plan Registry Lookup</h3>
+              <div class="d-flex gap-2">
+                <input
+                  type="text"
+                  id="dialplan-iso"
+                  class="form-control"
+                  value="GB"
+                  placeholder="ISO or Calling Code (e.g. US, GB, JP, +41)"
+                  aria-label="Country ISO or calling code"
+                />
+                <button type="button" id="btn-dialplan" class="btn btn-outline-dark rounded-pill px-3">
+                  Inspect Plan
+                </button>
+              </div>
+              <div id="dialplan-output" class="mt-3 small"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 fw-bold mb-0">E.164 Formats &amp; Normalization Audit Trail</h2>
+                <span id="phone-latency" class="badge bg-light text-dark border">Ready</span>
+              </div>
+              <div id="phone-output" class="studio-output-container" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/entity-standardizer/studio.js"></script>
+  </body>
+</html>

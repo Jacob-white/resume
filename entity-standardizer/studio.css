@@ -1,0 +1,164 @@
+.studio-header {
+  background: linear-gradient(135deg, var(--hero-bg-start), var(--hero-bg-end));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.studio-status-badge {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #a7f3d0;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  padding: 0.45rem 0.85rem;
+  font-weight: 600;
+}
+
+.studio-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.75rem;
+}
+
+.studio-tab {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.studio-tab:hover {
+  border-color: var(--accent-color);
+}
+
+.studio-tab.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+html[data-theme="dark"] .studio-tab.active {
+  background-color: var(--accent-color);
+  color: #0f172a;
+  border-color: var(--accent-color);
+}
+
+.studio-form .form-control {
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.studio-form .form-control:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 1px;
+}
+
+.studio-form .form-label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.preset-btn {
+  font-size: 0.78rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+}
+
+.studio-output-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.studio-hero-box {
+  background-color: var(--bg-light);
+  border-left: 4px solid var(--accent-color);
+  border-radius: 0.5rem;
+  padding: 0.9rem 1rem;
+}
+
+.studio-kv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+  gap: 0.65rem;
+}
+
+.studio-kv-item {
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.75rem;
+}
+
+.studio-kv-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  display: block;
+}
+
+.studio-kv-value {
+  font-weight: 600;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.studio-json-details {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-light);
+}
+
+.studio-json-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.studio-json-pre {
+  margin-top: 0.6rem;
+  margin-bottom: 0;
+  max-height: 300px;
+  overflow: auto;
+  font-size: 0.78rem;
+  background: rgba(15, 23, 42, 0.06);
+  padding: 0.65rem;
+  border-radius: 0.375rem;
+}
+
+.heal-badge {
+  display: inline-block;
+  background-color: rgba(14, 165, 233, 0.14);
+  color: var(--accent-color);
+  border: 1px solid rgba(14, 165, 233, 0.35);
+  border-radius: 0.375rem;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.82rem;
+  margin-bottom: 0.35rem;
+}
+
+.autocomplete-pill {
+  display: inline-block;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  padding: 0.3rem 0.6rem;
+  margin: 0.2rem 0.25rem 0.2rem 0;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.autocomplete-pill:hover {
+  border-color: var(--accent-color);
+}

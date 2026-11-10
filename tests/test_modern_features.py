@@ -75,6 +75,14 @@ class TestModernFeatures(unittest.TestCase):
             "/firm_network/",
         )
         self.assertEqual(
+            projects_section.locator('a[aria-label="Launch Entity Standardizer App"]').get_attribute("href"),
+            "/entity-standardizer/",
+        )
+        self.assertEqual(
+            projects_section.locator('a[aria-label="Launch Query Builder App"]').get_attribute("href"),
+            "/query-builder/",
+        )
+        self.assertEqual(
             projects_section.locator('a[aria-label="Launch Hobby Habit App"]').get_attribute("href"),
             "/login",
         )
@@ -87,6 +95,12 @@ class TestModernFeatures(unittest.TestCase):
             0,
             "Hobby Heroes is a private repo and should not expose a public GitHub link",
         )
+
+        # Verify Entity Standardizer Studio UI has all 4 interactive capability tabs
+        studio_path = self.repo_root / "entity-standardizer" / "index.html"
+        self.assertTrue(studio_path.exists())
+        self.page.goto(studio_path.as_uri())
+        self.assertEqual(self.page.locator(".studio-tab").count(), 4)
 
     def test_accessibility_landmarks_and_json_ld(self):
         """Verify semantic landmarks, skip link, JSON-LD Person schema, and custom Bootstrap bundle."""
