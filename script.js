@@ -111,4 +111,12 @@ function initThemeToggle() {
 document.addEventListener("DOMContentLoaded", () => {
   obfuscateEmails();
   initThemeToggle();
+  if ("serviceWorker" in navigator && typeof navigator.serviceWorker.getRegistrations === "function") {
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => {
+        registrations.forEach((registration) => registration.update());
+      })
+      .catch(() => {});
+  }
 });

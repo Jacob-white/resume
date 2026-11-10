@@ -51,7 +51,7 @@ class TestModernFeatures(unittest.TestCase):
         self.assertEqual(self.page.locator('meta[name="color-scheme"]').get_attribute("content"), "light dark")
 
     def test_projects_rendered(self):
-        """Verify all 5 portfolio projects are rendered and GitHub links exist."""
+        """Verify all 6 portfolio projects and live app / GitHub links are rendered."""
         projects_section = self.page.locator("#projects")
         self.assertTrue(projects_section.is_visible())
 
@@ -61,12 +61,27 @@ class TestModernFeatures(unittest.TestCase):
             "Query Builder",
             "Data Quality Check Platform",
             "Hobby Habit (Hobby Tracker)",
+            "Hobby Heroes",
         ]
         for title in project_titles:
             self.assertTrue(
                 projects_section.locator(f"h3:has-text('{title}')").is_visible(),
                 f"Expected project '{title}' to be visible",
             )
+
+        # Verify live app launch buttons exist for hosted apps
+        self.assertEqual(
+            projects_section.locator('a[aria-label="Launch Canonic MDM App"]').get_attribute("href"),
+            "/firm_network/",
+        )
+        self.assertEqual(
+            projects_section.locator('a[aria-label="Launch Hobby Habit App"]').get_attribute("href"),
+            "/login",
+        )
+        self.assertEqual(
+            projects_section.locator('a[aria-label="Launch Hobby Heroes App"]').get_attribute("href"),
+            "/hobby-heroes/",
+        )
 
     def test_accessibility_landmarks_and_json_ld(self):
         """Verify semantic landmarks, skip link, JSON-LD Person schema, and custom Bootstrap bundle."""
