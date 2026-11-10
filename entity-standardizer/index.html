@@ -91,6 +91,17 @@
           >
             4. Phone &amp; Dial Plan Inspector
           </button>
+          <button
+            type="button"
+            class="studio-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-csv"
+            id="tab-csv"
+            data-tab="csv"
+          >
+            5. Batch CSV Upload &amp; Export
+          </button>
         </div>
       </nav>
 
@@ -467,6 +478,78 @@
                 <span id="phone-latency" class="badge bg-light text-dark border">Ready</span>
               </div>
               <div id="phone-output" class="studio-output-container" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: BATCH CSV UPLOAD & EXPORT -->
+      <section id="panel-csv" class="studio-panel" role="tabpanel" aria-labelledby="tab-csv" hidden>
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <div class="modern-card h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h5 fw-bold mb-0">Batch CSV Upload &amp; Column Mapper</h2>
+                <span class="badge bg-light text-dark border">POST /v1/contact/batch</span>
+              </div>
+              <p class="small text-muted mb-3">
+                Upload any CRM, address, or contact CSV file (up to 1,000 rows per batch). Columns are auto-mapped to the 6-pillar standardization and deduplication engine.
+              </p>
+
+              <div class="csv-dropzone mb-3" id="csv-dropzone">
+                <label for="csv-file-input" class="csv-dropzone-label">
+                  <span class="fw-bold d-block mb-1">Drop a <code>.csv</code> file here or click to browse</span>
+                  <span class="small text-muted d-block">Supports UTF-8 CSVs with address, company, person, email, or phone columns</span>
+                </label>
+                <input
+                  type="file"
+                  id="csv-file-input"
+                  accept=".csv,text/csv"
+                  class="form-control mt-2"
+                  aria-label="Upload CSV file for standardization"
+                />
+              </div>
+
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btn-csv-sample" class="btn btn-sm btn-outline-secondary preset-btn">
+                  Load Sample Messy CRM CSV (6 Rows)
+                </button>
+                <button type="button" id="btn-csv-template" class="btn btn-sm btn-outline-secondary preset-btn">
+                  Download Sample CSV Template &darr;
+                </button>
+              </div>
+
+              <div id="csv-mapper-box" class="mb-3" hidden>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="small fw-bold text-uppercase text-muted">Detected CSV Column Mapping</span>
+                  <span id="csv-row-count-badge" class="badge bg-light text-dark border">0 rows</span>
+                </div>
+                <div id="csv-mapper-grid" class="csv-mapper-grid"></div>
+              </div>
+
+              <button type="button" id="btn-run-csv-batch" class="btn btn-custom-primary rounded-pill w-100" disabled>
+                Standardize &amp; Deduplicate CSV Batch
+              </button>
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <div class="modern-card h-100">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h2 class="h5 fw-bold mb-0">Batch Standardized Results &amp; Export</h2>
+                <div class="d-flex align-items-center gap-2">
+                  <span id="csv-latency" class="badge bg-light text-dark border">Ready</span>
+                  <button
+                    type="button"
+                    id="btn-download-csv"
+                    class="btn btn-sm btn-outline-dark rounded-pill px-3"
+                    disabled
+                  >
+                    Export Standardized CSV &darr;
+                  </button>
+                </div>
+              </div>
+              <div id="csv-output" class="studio-output-container" aria-live="polite"></div>
             </div>
           </div>
         </div>
