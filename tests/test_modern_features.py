@@ -84,7 +84,11 @@ class TestModernFeatures(unittest.TestCase):
         )
         self.assertEqual(
             projects_section.locator('a[aria-label="Launch Hobby Habit App"]').get_attribute("href"),
-            "/hub",
+            "/hobby-habit/",
+        )
+        self.assertEqual(
+            projects_section.locator('a[aria-label="Open Hobby Habit Hub"]').get_attribute("href"),
+            "/hub?launch=1",
         )
         self.assertEqual(
             projects_section.locator('a[aria-label="Launch Hobby Heroes App"]').get_attribute("href"),
@@ -101,6 +105,12 @@ class TestModernFeatures(unittest.TestCase):
         self.assertTrue(studio_path.exists())
         self.page.goto(studio_path.as_uri())
         self.assertEqual(self.page.locator(".studio-tab").count(), 4)
+
+        # Verify Hobby Habit Studio Showcase UI has all 3 interactive capability tabs
+        hh_studio_path = self.repo_root / "hobby-habit" / "index.html"
+        self.assertTrue(hh_studio_path.exists())
+        self.page.goto(hh_studio_path.as_uri())
+        self.assertEqual(self.page.locator(".hh-tab").count(), 3)
 
     def test_accessibility_landmarks_and_json_ld(self):
         """Verify semantic landmarks, skip link, JSON-LD Person schema, and custom Bootstrap bundle."""

@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     navigator.serviceWorker
       .getRegistrations()
       .then((registrations) => {
-        registrations.forEach((registration) => registration.update());
+        registrations.forEach((registration) => registration.unregister());
       })
       .catch(() => {});
   }

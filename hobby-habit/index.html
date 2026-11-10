@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Hobby Habit Interactive Showcase — Explore project roadmaps, goal milestones, session logging, and community blueprints."
+    />
+    <title>Hobby Habit Studio — Interactive Project &amp; Session Tracker Showcase</title>
+    <link rel="stylesheet" href="/bootstrap-custom.min.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/hobby-habit/studio.css" />
+  </head>
+  <body>
+    <a href="#hh-studio-main" class="skip-link">Skip to interactive showcase</a>
+
+    <header class="hh-header">
+      <div class="container py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <a href="/" class="btn btn-sm btn-outline-light rounded-pill">&larr; Back to Portfolio</a>
+          <div>
+            <h1 class="h4 mb-0 fw-bold text-white">Hobby Habit — Interactive Showcase</h1>
+            <p class="mb-0 small text-white opacity-75">
+              Goal Roadmaps, Session Tracking, Inventory &amp; Community Blueprints (Django + React + PostgreSQL)
+            </p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge rounded-pill hh-badge-demo">Interactive Guest Sandbox</span>
+          <a href="/hub?launch=1" class="btn btn-sm btn-light fw-bold rounded-pill px-3" id="open-full-hub-btn">
+            Open Full App (My Hub) &rarr;
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="hh-studio-main" class="container py-4">
+      <!-- KPI Summary Bar -->
+      <section aria-label="Workspace Summary Metrics" class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+          <div class="modern-card p-3 h-100">
+            <span class="small text-muted text-uppercase fw-bold d-block">Active Projects</span>
+            <span class="h3 fw-bold mb-0" id="metric-projects">3</span>
+            <span class="small text-muted d-block mt-1">Across 3 hobbies</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="modern-card p-3 h-100">
+            <span class="small text-muted text-uppercase fw-bold d-block">Total Hours Logged</span>
+            <span class="h3 fw-bold mb-0" id="metric-hours">142.5 hrs</span>
+            <span class="small text-success fw-bold d-block mt-1" id="metric-delta">+2.0 hrs today</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="modern-card p-3 h-100">
+            <span class="small text-muted text-uppercase fw-bold d-block">Milestones Completed</span>
+            <span class="h3 fw-bold mb-0" id="metric-goals">9 / 12</span>
+            <span class="small text-muted d-block mt-1" id="metric-pct">75% roadmap completion</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="modern-card p-3 h-100">
+            <span class="small text-muted text-uppercase fw-bold d-block">Current Streak</span>
+            <span class="h3 fw-bold mb-0" id="metric-streak">14 Days</span>
+            <span class="small text-muted d-block mt-1">Personal best: 29 days</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Tabs -->
+      <nav aria-label="Hobby Habit Interactive Views" class="mb-4">
+        <div class="hh-tabs" role="tablist">
+          <button
+            type="button"
+            class="hh-tab active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-roadmap"
+            id="tab-roadmap"
+            data-tab="roadmap"
+          >
+            1. Project Roadmap &amp; Quick Session Log
+          </button>
+          <button
+            type="button"
+            class="hh-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-shire"
+            id="tab-shire"
+            data-tab="shire"
+          >
+            2. The Shire (Community Blueprints)
+          </button>
+          <button
+            type="button"
+            class="hh-tab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-inventory"
+            id="tab-inventory"
+            data-tab="inventory"
+          >
+            3. Tool &amp; Material Inventory
+          </button>
+        </div>
+      </nav>
+
+      <!-- TAB 1: PROJECT ROADMAP & SESSION LOGGER -->
+      <section id="panel-roadmap" class="hh-panel active" role="tabpanel" aria-labelledby="tab-roadmap">
+        <div class="row g-4">
+          <div class="col-lg-7">
+            <div class="modern-card h-100">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h2 class="h5 fw-bold mb-0">Interactive Project Roadmaps</h2>
+                <div class="d-flex gap-2" role="group" aria-label="Select sample project">
+                  <button type="button" class="btn btn-sm btn-outline-secondary project-select-btn active" data-project="woodworking">
+                    Walnut Dining Table
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary project-select-btn" data-project="guitar">
+                    Villa-Lobos Etudes
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary project-select-btn" data-project="hydroponics">
+                    Automated Hydroponics
+                  </button>
+                </div>
+              </div>
+
+              <div id="project-detail-box" class="mb-3"></div>
+              <h3 class="h6 fw-bold text-muted text-uppercase small mb-2">
+                Click any milestone below to toggle completion:
+              </h3>
+              <div id="goal-list" class="d-flex flex-column gap-2" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="modern-card h-100">
+              <h2 class="h5 fw-bold mb-2">Quick-Log Practice / Build Session</h2>
+              <p class="small text-muted mb-3">
+                Log a session to see live updates to project hours, roadmap progress, and activity feed.
+              </p>
+
+              <form id="form-log-session" class="hh-form mb-4">
+                <div class="mb-2">
+                  <label for="session-hours" class="form-label small fw-bold">Duration (Hours)</label>
+                  <input type="number" id="session-hours" class="form-control" value="1.5" min="0.25" max="12" step="0.25" />
+                </div>
+                <div class="mb-3">
+                  <label for="session-note" class="form-label small fw-bold">Session Notes / Evidence Summary</label>
+                  <input
+                    type="text"
+                    id="session-note"
+                    class="form-control"
+                    value="Hand-planed tabletop glue-up joints and checked flatness with winding sticks."
+                  />
+                </div>
+                <button type="submit" class="btn btn-custom-primary rounded-pill w-100">
+                  + Log Session to Active Project
+                </button>
+              </form>
+
+              <h3 class="h6 fw-bold text-muted text-uppercase small mb-2">Recent Session Feed</h3>
+              <div id="session-feed" class="d-flex flex-column gap-2" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: THE SHIRE BLUEPRINTS -->
+      <section id="panel-shire" class="hh-panel" role="tabpanel" aria-labelledby="tab-shire" hidden>
+        <div class="modern-card">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+            <div>
+              <h2 class="h5 fw-bold mb-1">The Shire — Shareable Project Blueprints</h2>
+              <p class="small text-muted mb-0">
+                Clone community-crafted project templates (complete with milestone checklists and required tools) directly into your workspace.
+              </p>
+            </div>
+            <span class="badge bg-light text-dark border" id="adopted-count-badge">0 Blueprints Cloned in Sandbox</span>
+          </div>
+          <div class="row g-4" id="blueprint-grid"></div>
+        </div>
+      </section>
+
+      <!-- TAB 3: INVENTORY -->
+      <section id="panel-inventory" class="hh-panel" role="tabpanel" aria-labelledby="tab-inventory" hidden>
+        <div class="modern-card">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+            <div>
+              <h2 class="h5 fw-bold mb-1">Workshop &amp; Studio Inventory</h2>
+              <p class="small text-muted mb-0">
+                Track tools, consumables, and maintenance status linked across your hobby projects.
+              </p>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary inv-filter-btn active" data-filter="all">
+                All Items
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-secondary inv-filter-btn" data-filter="Tool">
+                Tools
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-secondary inv-filter-btn" data-filter="Material">
+                Materials
+              </button>
+            </div>
+          </div>
+          <div class="row g-3" id="inventory-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/hobby-habit/studio.js"></script>
+  </body>
+</html>
