@@ -163,6 +163,20 @@ hr {
 }
 
 /* Persistent Client CSV Import & Templates Quick-Start Banner */
+.studio-kpi-card {
+  background-color: var(--color-surface);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.studio-kpi-sub {
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
 .client-csv-banner {
   background-color: var(--color-surface);
   color: var(--color-text-main);
@@ -184,45 +198,57 @@ hr {
   padding: 0.25rem 0.65rem;
 }
 
-/* Navigation Tabs */
+/* Navigation Tabs (Single-Row Scrollable Tablist per modern-web-guidance `tabs`) */
 .studio-tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: inline proximity;
   gap: 0.5rem;
   border-bottom: 2px solid var(--color-border);
-  padding-bottom: 0.75rem;
+  padding-bottom: 0.65rem;
 }
 
 .studio-tab {
+  flex: none;
+  scroll-snap-align: start;
+  position: relative;
   background-color: var(--color-surface);
   color: var(--color-text-main);
   border: 1px solid var(--color-border);
-  border-radius: 999px;
-  padding: 0.55rem 1.15rem;
+  border-radius: 0.5rem;
+  padding: 0.55rem 1rem;
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .studio-tab:hover {
   border-color: var(--color-primary);
 }
 
-.studio-tab.active {
+.studio-tab[aria-selected="true"] {
   background-color: #1e293b;
   color: #ffffff;
   border-color: #1e293b;
 }
 
-:root[data-theme="dark"] .studio-tab.active {
+.studio-tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0.5rem -0.45rem;
+  border-block-end: 3px solid var(--color-primary);
+}
+
+:root[data-theme="dark"] .studio-tab[aria-selected="true"] {
   background-color: #38bdf8;
   color: #0f172a;
   border-color: #38bdf8;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .studio-tab.active {
+  :root:not([data-theme="light"]) .studio-tab[aria-selected="true"] {
     background-color: #38bdf8;
     color: #0f172a;
     border-color: #38bdf8;
@@ -500,18 +526,37 @@ code {
 }
 
 .csv-results-table-wrap {
-  overflow-x: auto;
+  overflow: auto;
+  max-inline-size: 100%;
+  max-block-size: min(460px, 75vh);
+  container-type: inline-size;
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  max-height: 440px;
-  overflow-y: auto;
 }
 
 .csv-results-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.8rem;
   color: var(--color-text-main);
+}
+
+.csv-results-table caption {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  caption-side: top;
+}
+
+.csv-results-table thead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
 }
 
 .csv-results-table th,
@@ -522,18 +567,62 @@ code {
   vertical-align: top;
 }
 
-.csv-results-table th {
+.csv-results-table thead th {
   background-color: var(--color-surface-alt);
   color: var(--color-text-muted);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.csv-results-table tbody th {
   position: sticky;
-  top: 0;
-  z-index: 1;
+  inset-inline-start: 0;
+  background-color: var(--color-surface);
+  font-weight: 700;
 }
 
 .csv-results-table tbody tr:hover {
   background-color: var(--color-tag-bg);
+}
+
+/* Before vs. After Comparison & Score Meter */
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.75rem;
+}
+
+.diff-box {
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  color: var(--color-text-main);
+}
+
+.diff-box-after {
+  border-left: 4px solid #10b981;
+}
+
+.diff-box-before {
+  border-left: 4px solid #f59e0b;
+}
+
+.score-meter-track {
+  width: 100%;
+  height: 8px;
+  background-color: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 0.4rem;
+}
+
+.score-meter-fill {
+  height: 100%;
+  width: var(--score-pct, 0%);
+  background: linear-gradient(90deg, #0ea5e9, #10b981);
+  border-radius: 999px;
+  transition: width 0.25s ease;
 }
 

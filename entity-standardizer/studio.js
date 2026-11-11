@@ -37,6 +37,24 @@ const PRESETS = {
     country: "GB",
     geocode: false,
   },
+  "addr-wacker": {
+    street1: "233 s. wacker dr. flr 84",
+    street2: "suite 8400",
+    city: "chicago",
+    state: "IL",
+    zip: "60606",
+    country: "US",
+    geocode: true,
+  },
+  "addr-pr": {
+    street1: "urb los olmos 142 calle a",
+    street2: "apt 3",
+    city: "san juan",
+    state: "puerto rico",
+    zip: "00927",
+    country: "US",
+    geocode: true,
+  },
   "contact-heal": {
     person: "Dr. Sarah J. Jenkins, CFA, PhD",
     title: "sr. managing dir - institutional sales",
@@ -73,6 +91,42 @@ const PRESETS = {
     city: "boston",
     state: "MA 02210",
   },
+  "contact-intl": {
+    person: "Prof. Elena V. Rostova, PhD",
+    title: "managing director, systematic macro",
+    org: "CITADEL ENTERPRISE EUROPE LIMITED DBA CITADEL SECURITIES",
+    email: "elena.rostova+macro@citadel.com",
+    phone: "+44 (0) 20 7946 0921",
+    website: "https://www.citadel.com/strategies?utm_campaign=q4&fbclid=abc99",
+    social: "https://www.linkedin.com/in/elena-rostova-phd/",
+    street: "120 london wall",
+    city: "london",
+    state: "EC2Y 5ET",
+  },
+  "pillars-inst": {
+    company: "J.P. MORGAN INVESTMENT MANAGEMENT INC. /DE/ DBA JPM ASSET MGMT",
+    person: "Dr. Robert (Bob) J. Smith, III, MD, CFA",
+    title: "evp & global head of quantitative engineering",
+    email: "Robert.Smith+institutional@jpmorgan.com",
+    url: "HTTPS://am.jpmorgan.com/us/en?utm_medium=cpc&gclid=abc",
+    social: "https://www.linkedin.com/in/robert-smith-cfa/",
+  },
+  "pillars-eu": {
+    company: "ALLIANZ GLOBAL INVESTORS GMBH FKA ALLIANZ DRESDNER ASSET MGMT",
+    person: "Prof. Dr. Lukas M. Weber, PhD",
+    title: "chief risk & compliance officer",
+    email: "Lukas.Weber+emea@allianzgi.com",
+    url: "https://www.allianzgi.com/en/institutional?utm_source=email",
+    social: "https://x.com/allianzgi",
+  },
+  "pillars-tech": {
+    company: "ANTHROPIC, PBC /DE/ DBA CLAUDE ENTERPRISE",
+    person: "William (Bill) K. Vance, Jr., CPA",
+    title: "sr. staff distributed systems engineer",
+    email: "bill.vance+devtools@anthropic.com",
+    url: "https://www.anthropic.com/enterprise?fbclid=xyz987&utm_term=ai",
+    social: "https://github.com/billvance-dev",
+  },
   "dedup-company-pair": {
     mode: "company-pair",
     a: "THE VANGUARD GROUP, INC. /PA/",
@@ -82,6 +136,16 @@ const PRESETS = {
     mode: "address-pair",
     a: "100 Wall Street, Suite 2400, New York, NY 10005",
     b: "100 WALL ST STE 2400, NEW YORK, NY 10005-0001",
+  },
+  "dedup-person-pair": {
+    mode: "person-pair",
+    a: "Dr. Robert (Bob) J. Smith, III, MD",
+    b: "Bob Smith III",
+  },
+  "dedup-email-pair": {
+    mode: "email-pair",
+    a: "Sarah.Jenkins+events@Vanguard.com",
+    b: "sarah.jenkins@vanguard.com",
   },
   "dedup-contact-cluster": {
     mode: "contact-cluster",
@@ -132,6 +196,7 @@ const PRESETS = {
   "phone-uk": { raw: "+44 (0) 20 7946 0921", country: "GB" },
   "phone-vanity": { raw: "1-800-FLOWERS", country: "US" },
   "phone-de": { raw: "0049 (0) 89 12345678", country: "DE" },
+  "phone-jp": { raw: "+81 (0) 3-5224-6111", country: "JP" },
 };
 
 const SAMPLE_CSV_TEXT = `full_name,job_title,company,email,phone,website,street1,street2,city,state,zip,country
@@ -141,6 +206,13 @@ const SAMPLE_CSV_TEXT = `full_name,job_title,company,email,phone,website,street1
 "M. R. Chen",EVP & CTO,BlackRock Inc,mchen+events@blackrock.com,+1-212-810-5300,blackrock.com,50 HUDSON YDS,40th Floor,NEW YORK,New York,10001,US
 "FIDELITY DISTRIBUTORS COMPANY LLC",vp regional consultant,,advisor.support@fmr.com,800-343-3548,https://institutional.fidelity.com,245 summer street,,boston,MA,02210,US
 "Elena Rostova",head of quantitative research,"Citadel Enterprise Americas LLC",,+44 (0) 20 7946 0921,https://www.citadel.com?fbclid=123,221b baker st,flat 2,london,,nw1 6xe,GB`;
+
+const SAMPLE_ADDRESS_CSV_TEXT = `company,street1,street2,city,state,zip,country
+"Vanguard Institutional",100 vanguard blvd,bldg m3,malvern,Pennsylvania,19355,US
+"Vanguard Group",100 VANGUARD BOULEVARD,BLDG M3,MALVERN,PA,19355-0001,US
+"Corporation Trust Center",1209 orange st,#441,wilmington,delaware,19801,US
+"Willis Tower Operations",233 s. wacker drive,suite 8400,chicago,illinois,60606,US
+"Sherlock Consulting Ltd",221b baker street,flat 2,london,,nw1 6xe,GB`;
 
 const TARGET_FIELDS = [
   { key: "", label: "— Ignore / Pass-Through —" },
@@ -372,7 +444,7 @@ async function runCsvBatchStandardization() {
           .join(", ");
 
         return `<tr>
-          <td class="fw-bold">${i + 1}</td>
+          <th scope="row">${i + 1}</th>
           <td>${clusterBadge}</td>
           <td>
             <div class="fw-bold">${esc(p.full_name || p.canonical_name)}</div>
@@ -402,17 +474,20 @@ async function runCsvBatchStandardization() {
         ${kvCard("Unique Entities", `${uniqueCount} (${results.length - uniqueCount} duplicates merged)`)}
         ${kvCard("Auto-Repair Actions", `${totalHealCount} cross-field & pillar heals`)}
       </div>
-      <div class="csv-results-table-wrap">
+      <div tabindex="0" role="region" aria-labelledby="csv-results-caption" class="csv-results-table-wrap">
         <table class="csv-results-table">
+          <caption id="csv-results-caption">
+            Standardized &amp; Deduplicated Batch Results (${results.length} rows &rarr; ${uniqueCount} unique entities)
+          </caption>
           <thead>
             <tr>
-              <th>#</th>
-              <th>Cluster</th>
-              <th>Person &amp; Title</th>
-              <th>Organization (ISO 20275)</th>
-              <th>Email &amp; E.164 Phone</th>
-              <th>Standardized Address</th>
-              <th>Quality</th>
+              <th scope="col">#</th>
+              <th scope="col">Cluster</th>
+              <th scope="col">Person &amp; Title</th>
+              <th scope="col">Organization (ISO 20275)</th>
+              <th scope="col">Email &amp; E.164 Phone</th>
+              <th scope="col">Standardized Address</th>
+              <th scope="col">Quality</th>
             </tr>
           </thead>
           <tbody>
@@ -520,10 +595,17 @@ function kvCard(label, value) {
   </div>`;
 }
 
-function jsonDetails(data) {
-  return `<details class="studio-json-details">
+function jsonDetails(data, sdkSnippet = "") {
+  const sdkBlock = sdkSnippet
+    ? `<details class="studio-json-details">
+        <summary>Python SDK &amp; REST cURL Quickstart Snippet</summary>
+        <pre class="studio-json-pre" tabindex="0" role="region" aria-label="SDK and cURL code snippet"><code>${esc(sdkSnippet)}</code></pre>
+      </details>`
+    : "";
+  return `${sdkBlock}
+  <details class="studio-json-details">
     <summary>Inspect Full JSON Payload</summary>
-    <pre class="studio-json-pre"><code>${esc(JSON.stringify(data, null, 2))}</code></pre>
+    <pre class="studio-json-pre" tabindex="0" role="region" aria-label="Raw JSON response"><code>${esc(JSON.stringify(data, null, 2))}</code></pre>
   </details>`;
 }
 
@@ -561,14 +643,19 @@ async function checkEngineStatus() {
 async function runAddressStandardization() {
   const out = document.getElementById("address-output");
   try {
+    const rawStreet1 = document.getElementById("addr-street1").value.trim();
+    const rawStreet2 = document.getElementById("addr-street2").value.trim();
+    const rawCity = document.getElementById("addr-city").value.trim();
     const stateZipRaw = document.getElementById("addr-state").value.trim();
+    const rawZip = document.getElementById("addr-zip").value.trim();
+    const rawCountry = document.getElementById("addr-country").value.trim() || "US";
     const body = {
-      street1: document.getElementById("addr-street1").value.trim() || null,
-      street2: document.getElementById("addr-street2").value.trim() || null,
-      city: document.getElementById("addr-city").value.trim() || null,
+      street1: rawStreet1 || null,
+      street2: rawStreet2 || null,
+      city: rawCity || null,
       state: stateZipRaw || null,
-      postal_code: document.getElementById("addr-zip").value.trim() || null,
-      country: document.getElementById("addr-country").value.trim() || "US",
+      postal_code: rawZip || null,
+      country: rawCountry,
       enable_geocoding: document.getElementById("addr-geocode").checked,
       explain: true,
     };
@@ -585,11 +672,31 @@ async function runAddressStandardization() {
           .join(" \u2022 ")
       : "\u2014";
 
+    const sdkSnippet = `from entity_standardizer import standardize_address
+
+res = standardize_address(
+    street1=${JSON.stringify(rawStreet1)},
+    street2=${JSON.stringify(rawStreet2 || null)},
+    city=${JSON.stringify(rawCity)},
+    state=${JSON.stringify(stateZipRaw)},
+    postal_code=${JSON.stringify(rawZip)},
+    country=${JSON.stringify(rawCountry)},
+    enable_geocoding=${body.enable_geocoding ? "True" : "False"},
+)
+print(res.street1, res.city, res.state, res.postal_code, res.normalized_address_key)`;
+
     out.innerHTML = `
-      <div class="studio-hero-box">
-        <div class="small text-muted fw-bold text-uppercase mb-1">Canonical USPS Pub 28 / UPU S42 Envelope</div>
-        <div class="h5 fw-bold mb-1">${esc(data.street1)}${data.street2 ? ` <span class="text-muted">(${esc(data.street2)})</span>` : ""}</div>
-        <div class="fw-bold text-muted">${esc(data.city)}, ${esc(data.state)} ${esc(data.postal_code)} \u2022 ${esc(data.country)}</div>
+      <div class="diff-grid">
+        <div class="diff-box diff-box-before">
+          <div class="studio-kv-label">Before (Raw Input)</div>
+          <div class="fw-bold">${esc(rawStreet1)}${rawStreet2 ? ` <span class="text-muted">(${esc(rawStreet2)})</span>` : ""}</div>
+          <div class="small text-muted">${esc(rawCity)}, ${esc(stateZipRaw)} ${esc(rawZip)} \u2022 ${esc(rawCountry)}</div>
+        </div>
+        <div class="diff-box diff-box-after">
+          <div class="studio-kv-label">After (Canonical USPS Pub 28 / UPU S42)</div>
+          <div class="fw-bold">${esc(data.street1)}${data.street2 ? ` <span class="text-muted">(${esc(data.street2)})</span>` : ""}</div>
+          <div class="small text-muted">${esc(data.city)}, ${esc(data.state)} ${esc(data.postal_code)} \u2022 ${esc(data.country)}</div>
+        </div>
       </div>
       <div class="studio-kv-grid">
         ${kvCard("Address Status", data.address_status)}
@@ -603,7 +710,7 @@ async function runAddressStandardization() {
         ${kvCard("FIPS / Census Tract", `${data.fips_code || "\u2014"} / ${data.census_tract || "\u2014"}`)}
       </div>
       <div class="small text-muted"><strong>Field Confidence:</strong> ${esc(confEntries)}</div>
-      ${jsonDetails(data)}
+      ${jsonDetails(data, sdkSnippet)}
     `;
   } catch (err) {
     out.innerHTML = `<div class="alert alert-danger">${esc(err.message)}</div>`;
@@ -688,13 +795,16 @@ async function runContactCrossHealing() {
       ...(phone.healing_actions || []).map((a) => `<span class="heal-badge"><strong>PHONE:</strong> ${esc(a)}</span>`),
     ].join(" ");
 
+    const confPct = `${(Number(data.overall_confidence || 0) * 100).toFixed(0)}%`;
+
     out.innerHTML = `
       <div class="studio-hero-box">
         <div class="d-flex justify-content-between align-items-center mb-1">
-          <span class="small text-muted fw-bold text-uppercase">Unified Entity Key</span>
-          <span class="badge bg-light text-dark border">Confidence: ${(Number(data.overall_confidence || 0) * 100).toFixed(0)}%</span>
+          <span class="small text-muted fw-bold text-uppercase">Unified Golden Record Entity Key</span>
+          <span class="badge bg-light text-dark border">Overall Confidence: ${confPct}</span>
         </div>
         <div class="fw-bold font-monospace small">${esc(data.entity_key)}</div>
+        <div class="score-meter-track"><div class="score-meter-fill" style="--score-pct: ${confPct}"></div></div>
       </div>
       ${allHealBadges ? `<div><div class="small fw-bold text-muted mb-1">Cross-Healing &amp; Pillar Repair Actions Triggered:</div><div class="d-flex flex-wrap gap-1">${allHealBadges}</div></div>` : ""}
       <div class="studio-kv-grid">
@@ -715,6 +825,50 @@ async function runContactCrossHealing() {
   }
 }
 
+async function runPillarsDeepDive() {
+  const out = document.getElementById("pillars-output");
+  try {
+    const companyRaw = document.getElementById("pil-company").value.trim();
+    const personRaw = document.getElementById("pil-person").value.trim();
+    const titleRaw = document.getElementById("pil-title").value.trim();
+    const emailRaw = document.getElementById("pil-email").value.trim();
+    const urlRaw = document.getElementById("pil-url").value.trim();
+    const socialRaw = document.getElementById("pil-social").value.trim();
+
+    const t0 = performance.now();
+    const [co, pe, ti, em, ur, so] = await Promise.all([
+      apiPost("/v1/company", { name: companyRaw, country: "US" }, "pillars-latency"),
+      apiPost("/v1/person", { name: personRaw }, "pillars-latency"),
+      apiPost("/v1/job-title", { title: titleRaw }, "pillars-latency"),
+      apiPost("/v1/email", { email: emailRaw }, "pillars-latency"),
+      apiPost("/v1/url", { url: urlRaw }, "pillars-latency"),
+      apiPost("/v1/social", { profile: socialRaw }, "pillars-latency"),
+    ]);
+    document.getElementById("pillars-latency").textContent = `${(performance.now() - t0).toFixed(1)} ms (6 calls)`;
+
+    out.innerHTML = `
+      <div class="studio-hero-box">
+        <div class="small text-muted fw-bold text-uppercase mb-1">1. Organization Parser (ISO 20275 ELF)</div>
+        <div class="fw-bold">${esc(co.legal_name)} ${co.dba_name ? `<span class="text-muted">(DBA: ${esc(co.dba_name)})</span>` : ""}</div>
+        <div class="small text-muted">Brand Key: <code>${esc(co.brand_key)}</code> \u2022 Phonetic: <code>${esc(co.phonetic_key)}</code> \u2022 Heals: <code>${esc((co.healing_actions || []).join(", ") || "None")}</code></div>
+      </div>
+      <div class="studio-kv-grid">
+        ${kvCard("Person Canonical", `${pe.full_name || "\u2014"} (Root: ${pe.root_first_name || pe.first_name || "\u2014"})`)}
+        ${kvCard("Nickname / Suffix / Creds", [pe.nickname ? `Nick: ${pe.nickname}` : "", pe.generational_suffix, (pe.credentials || []).join(", ")].filter(Boolean).join(" \u2022 "))}
+        ${kvCard("Job Title Canonical", ti.normalized_title)}
+        ${kvCard("Seniority & Department", `${ti.seniority_level || "Standard"} \u2022 ${ti.department || "General"} ${ti.is_executive ? "(Executive)" : ""}`)}
+        ${kvCard("Canonical Email & +Tag", `${em.email || "\u2014"} ${em.subaddress ? `(Subaddress: +${em.subaddress})` : ""}`)}
+        ${kvCard("Email Classification", `${em.email_type || "STANDARD"} (Free: ${em.is_free_provider ? "Yes" : "No"}, Role: ${em.is_role_account ? "Yes" : "No"})`)}
+        ${kvCard("Clean Website URL", `${ur.url || "\u2014"} (Domain: ${ur.domain || "\u2014"})`)}
+        ${kvCard("Social Handle & Platform", `${so.platform || "\u2014"}: @${so.handle || "\u2014"} (${so.profile_type || "PROFILE"})`)}
+      </div>
+      ${jsonDetails({ company: co, person: pe, job_title: ti, email: em, url: ur, social: so })}
+    `;
+  } catch (err) {
+    out.innerHTML = `<div class="alert alert-danger">${esc(err.message)}</div>`;
+  }
+}
+
 async function runDeduplication() {
   const out = document.getElementById("dedup-output");
   const mode = document.getElementById("dedup-mode").value;
@@ -723,12 +877,14 @@ async function runDeduplication() {
       const a = document.getElementById("dedup-entity-a").value.trim();
       const b = document.getElementById("dedup-entity-b").value.trim();
       const data = await apiPost("/v1/company/compare", { company_a: a, company_b: b }, "dedup-latency");
+      const pct = `${(Number(data.score || 0) * 100).toFixed(1)}%`;
       out.innerHTML = `
         <div class="studio-hero-box">
           <div class="small text-muted fw-bold text-uppercase mb-1">ISO 20275 Company Resolution Verdict</div>
-          <div class="h5 fw-bold mb-0">
-            ${data.is_match ? "MATCH" : "DISTINCT"} \u2022 Score: ${(Number(data.score) * 100).toFixed(1)}% (${esc(data.match_type)})
+          <div class="h5 fw-bold mb-1">
+            ${data.is_match ? "MATCH" : "DISTINCT"} \u2022 Score: ${pct} (${esc(data.match_type)})
           </div>
+          <div class="score-meter-track"><div class="score-meter-fill" style="--score-pct: ${pct}"></div></div>
         </div>
         <div class="studio-kv-grid">
           ${kvCard("Company A Legal Name", data.company_a?.legal_name)}
@@ -744,12 +900,56 @@ async function runDeduplication() {
       const a = document.getElementById("dedup-entity-a").value.trim();
       const b = document.getElementById("dedup-entity-b").value.trim();
       const data = await apiPost("/v1/address/compare", { address_a: a, address_b: b }, "dedup-latency");
+      const pct = `${(Number(data.similarity || data.score || 0) * 100).toFixed(1)}%`;
       out.innerHTML = `
         <div class="studio-hero-box">
           <div class="small text-muted fw-bold text-uppercase mb-1">Address Comparison Verdict</div>
-          <div class="h5 fw-bold mb-0">
-            ${data.is_match ? "MATCH" : "DISTINCT"} \u2022 Similarity: ${(Number(data.similarity || data.score || 0) * 100).toFixed(1)}% (${esc(data.match_type)})
+          <div class="h5 fw-bold mb-1">
+            ${data.is_match ? "MATCH" : "DISTINCT"} \u2022 Similarity: ${pct} (${esc(data.match_type)})
           </div>
+          <div class="score-meter-track"><div class="score-meter-fill" style="--score-pct: ${pct}"></div></div>
+        </div>
+        ${jsonDetails(data)}
+      `;
+    } else if (mode === "person-pair") {
+      const a = document.getElementById("dedup-entity-a").value.trim();
+      const b = document.getElementById("dedup-entity-b").value.trim();
+      const data = await apiPost("/v1/person/compare", { person_a: a, person_b: b }, "dedup-latency");
+      const pct = `${(Number(data.score || 0) * 100).toFixed(1)}%`;
+      out.innerHTML = `
+        <div class="studio-hero-box">
+          <div class="small text-muted fw-bold text-uppercase mb-1">Person Name &amp; Nickname Root Resolution</div>
+          <div class="h5 fw-bold mb-1">
+            ${data.is_match ? "MATCH" : "DISTINCT"} \u2022 Score: ${pct} (${esc(data.match_type)})
+          </div>
+          <div class="score-meter-track"><div class="score-meter-fill" style="--score-pct: ${pct}"></div></div>
+        </div>
+        <div class="studio-kv-grid">
+          ${kvCard("Person A Root Key", data.person_a?.person_root_key)}
+          ${kvCard("Person B Root Key", data.person_b?.person_root_key)}
+          ${kvCard("Person A Heals", (data.person_a?.healing_actions || []).join(", "))}
+          ${kvCard("Person B Heals", (data.person_b?.healing_actions || []).join(", "))}
+        </div>
+        ${jsonDetails(data)}
+      `;
+    } else if (mode === "email-pair") {
+      const a = document.getElementById("dedup-entity-a").value.trim();
+      const b = document.getElementById("dedup-entity-b").value.trim();
+      const data = await apiPost("/v1/email/compare", { email_a: a, email_b: b }, "dedup-latency");
+      const pct = `${(Number(data.score || 0) * 100).toFixed(1)}%`;
+      out.innerHTML = `
+        <div class="studio-hero-box">
+          <div class="small text-muted fw-bold text-uppercase mb-1">Email Subaddress &amp; Alias Resolution</div>
+          <div class="h5 fw-bold mb-1">
+            ${data.is_match ? "MATCH" : "DISTINCT"} \u2022 Score: ${pct} (${esc(data.match_type)})
+          </div>
+          <div class="score-meter-track"><div class="score-meter-fill" style="--score-pct: ${pct}"></div></div>
+        </div>
+        <div class="studio-kv-grid">
+          ${kvCard("Email A Canonical", data.email_a?.email)}
+          ${kvCard("Email B Canonical", data.email_b?.email)}
+          ${kvCard("Email A +Tag Extracted", data.email_a?.subaddress)}
+          ${kvCard("Email B +Tag Extracted", data.email_b?.subaddress)}
         </div>
         ${jsonDetails(data)}
       `;
@@ -864,6 +1064,14 @@ function applyPreset(key) {
     document.getElementById("cnt-city").value = p.city;
     document.getElementById("cnt-state").value = p.state;
     runContactCrossHealing();
+  } else if (key.startsWith("pillars-")) {
+    document.getElementById("pil-company").value = p.company;
+    document.getElementById("pil-person").value = p.person;
+    document.getElementById("pil-title").value = p.title;
+    document.getElementById("pil-email").value = p.email;
+    document.getElementById("pil-url").value = p.url;
+    document.getElementById("pil-social").value = p.social;
+    runPillarsDeepDive();
   } else if (key.startsWith("dedup-")) {
     document.getElementById("dedup-mode").value = p.mode;
     const pairDiv = document.getElementById("dedup-pair-inputs");
@@ -897,6 +1105,9 @@ document.addEventListener("DOMContentLoaded", () => {
       t.classList.toggle("active", active);
       t.setAttribute("aria-selected", active ? "true" : "false");
     });
+    if (typeof tab.scrollIntoView === "function") {
+      tab.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
     document.querySelectorAll(".studio-panel").forEach((panel) => {
       const isTarget = panel.id === `panel-${target}`;
       panel.hidden = !isTarget;
@@ -904,6 +1115,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (target === "contact" && !document.getElementById("contact-output").innerHTML) {
       runContactCrossHealing();
+    } else if (target === "pillars" && !document.getElementById("pillars-output").innerHTML) {
+      runPillarsDeepDive();
     } else if (target === "dedup" && !document.getElementById("dedup-output").innerHTML) {
       runDeduplication();
     } else if (target === "phone" && !document.getElementById("phone-output").innerHTML) {
@@ -949,8 +1162,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Preset buttons
-  document.querySelectorAll(".preset-btn").forEach((btn) => {
+  document.querySelectorAll(".preset-btn[data-preset]").forEach((btn) => {
     btn.addEventListener("click", () => applyPreset(btn.getAttribute("data-preset")));
+  });
+
+  // Autocomplete prefix quick chips
+  document.querySelectorAll(".auto-prefix-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.getElementById("addr-autocomplete-input").value = btn.getAttribute("data-prefix") || "";
+      runAutocomplete();
+    });
+  });
+
+  // Dial plan quick country pills
+  document.querySelectorAll(".dialplan-pill").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.getElementById("dialplan-iso").value = btn.getAttribute("data-iso") || "US";
+      runDialPlanLookup();
+    });
   });
 
   // Form submissions
@@ -963,6 +1192,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("form-contact").addEventListener("submit", (e) => {
     e.preventDefault();
     runContactCrossHealing();
+  });
+
+  document.getElementById("form-pillars").addEventListener("submit", (e) => {
+    e.preventDefault();
+    runPillarsDeepDive();
   });
 
   document.getElementById("form-dedup").addEventListener("submit", (e) => {
@@ -1016,6 +1250,13 @@ document.addEventListener("DOMContentLoaded", () => {
     loadCsvTextIntoMapper(SAMPLE_CSV_TEXT);
     runCsvBatchStandardization();
   });
+  const sampleAddrBtn = document.getElementById("btn-csv-sample-addr");
+  if (sampleAddrBtn) {
+    sampleAddrBtn.addEventListener("click", () => {
+      loadCsvTextIntoMapper(SAMPLE_ADDRESS_CSV_TEXT);
+      runCsvBatchStandardization();
+    });
+  }
   document.getElementById("btn-csv-template").addEventListener("click", () => {
     const blob = new Blob([SAMPLE_CSV_TEXT], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);

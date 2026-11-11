@@ -100,13 +100,16 @@ class TestModernFeatures(unittest.TestCase):
             "Hobby Heroes is a private repo and should not expose a public GitHub link",
         )
 
-        # Verify Entity Standardizer Studio UI has all 5 interactive capability tabs (including Batch CSV Upload) and readable layout/contrast
+        # Verify Entity Standardizer Studio UI has all 6 interactive capability tabs (including Pillar Deep-Dive and Batch CSV Upload) and readable layout/contrast
         studio_path = self.repo_root / "entity-standardizer" / "index.html"
         self.assertTrue(studio_path.exists())
         self.page.set_viewport_size({"width": 1280, "height": 800})
         self.page.goto(studio_path.as_uri())
-        self.assertEqual(self.page.locator(".studio-tab").count(), 5)
+        self.assertEqual(self.page.locator(".studio-tab").count(), 6)
+        self.assertEqual(self.page.locator(".studio-kpi-card").count(), 4)
         self.assertEqual(self.page.locator("#csv-file-input").count(), 1)
+        self.assertGreaterEqual(self.page.locator(".auto-prefix-btn").count(), 4)
+        self.assertGreaterEqual(self.page.locator(".dialplan-pill").count(), 6)
         es_styles = self.page.evaluate(
             """() => {
             const hdr = getComputedStyle(document.querySelector('.studio-header'));
