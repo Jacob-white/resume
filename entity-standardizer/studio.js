@@ -238,7 +238,11 @@ function csvEscapeCell(val) {
   return s;
 }
 
-function loadCsvTextIntoMapper(csvText) {
+function loadCsvTextIntoMapper(csvText, syncTextarea = true) {
+  const rawArea = document.getElementById("csv-raw-textarea");
+  if (syncTextarea && rawArea && rawArea.value !== csvText) {
+    rawArea.value = csvText;
+  }
   const parsed = parseCsvText(csvText);
   parsedCsvState.headers = parsed.headers;
   parsedCsvState.rows = parsed.rows;
@@ -885,33 +889,64 @@ function applyPreset(key) {
 document.addEventListener("DOMContentLoaded", () => {
   checkEngineStatus();
 
+  function activateStudioTab(target, moveFocus = false) {
+    const tab = document.querySelector(`.studio-tab[data-tab="${target}"]`);
+    if (!tab) return;
+    document.querySelectorAll(".studio-tab").forEach((t) => {
+      const active = t === tab;
+      t.classList.toggle("active", active);
+      t.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    document.querySelectorAll(".studio-panel").forEach((panel) => {
+      const isTarget = panel.id === `panel-${target}`;
+      panel.hidden = !isTarget;
+      panel.classList.toggle("active", isTarget);
+    });
+    if (target === "contact" && !document.getElementById("contact-output").innerHTML) {
+      runContactCrossHealing();
+    } else if (target === "dedup" && !document.getElementById("dedup-output").innerHTML) {
+      runDeduplication();
+    } else if (target === "phone" && !document.getElementById("phone-output").innerHTML) {
+      runPhoneInspector();
+      runDialPlanLookup();
+    } else if (target === "csv" && !parsedCsvState.rows.length) {
+      loadCsvTextIntoMapper(SAMPLE_CSV_TEXT);
+      runCsvBatchStandardization();
+    }
+    if (moveFocus && target === "csv") {
+      const heading = document.getElementById("csv-panel-heading");
+      if (heading) heading.focus();
+    }
+  }
+
   // Tab switching
   document.querySelectorAll(".studio-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
-      const target = tab.getAttribute("data-tab");
-      document.querySelectorAll(".studio-tab").forEach((t) => {
-        const active = t === tab;
-        t.classList.toggle("active", active);
-        t.setAttribute("aria-selected", active ? "true" : "false");
-      });
-      document.querySelectorAll(".studio-panel").forEach((panel) => {
-        const isTarget = panel.id === `panel-${target}`;
-        panel.hidden = !isTarget;
-        panel.classList.toggle("active", isTarget);
-      });
-      if (target === "contact" && !document.getElementById("contact-output").innerHTML) {
-        runContactCrossHealing();
-      } else if (target === "dedup" && !document.getElementById("dedup-output").innerHTML) {
-        runDeduplication();
-      } else if (target === "phone" && !document.getElementById("phone-output").innerHTML) {
-        runPhoneInspector();
-        runDialPlanLookup();
-      } else if (target === "csv" && !parsedCsvState.rows.length) {
-        loadCsvTextIntoMapper(SAMPLE_CSV_TEXT);
-        runCsvBatchStandardization();
-      }
+      activateStudioTab(tab.getAttribute("data-tab"), false);
     });
   });
+
+  // Top Header & Quick-Start Banner CSV buttons
+  const headerCsvBtn = document.getElementById("btn-header-csv-jump");
+  if (headerCsvBtn) {
+    headerCsvBtn.addEventListener("click", () => activateStudioTab("csv", true));
+  }
+  const quickUploadBtn = document.getElementById("btn-quick-upload-csv");
+  if (quickUploadBtn) {
+    quickUploadBtn.addEventListener("click", () => {
+      activateStudioTab("csv", true);
+      const csvInput = document.getElementById("csv-file-input");
+      if (csvInput) csvInput.click();
+    });
+  }
+  const quickSampleBtn = document.getElementById("btn-quick-sample-csv");
+  if (quickSampleBtn) {
+    quickSampleBtn.addEventListener("click", () => {
+      activateStudioTab("csv", true);
+      loadCsvTextIntoMapper(SAMPLE_CSV_TEXT);
+      runCsvBatchStandardization();
+    });
+  }
 
   // Preset buttons
   document.querySelectorAll(".preset-btn").forEach((btn) => {
@@ -992,6 +1027,12 @@ document.addEventListener("DOMContentLoaded", () => {
     a.remove();
     URL.revokeObjectURL(url);
   });
+  const csvRawTextarea = document.getElementById("csv-raw-textarea");
+  if (csvRawTextarea) {
+    csvRawTextarea.addEventListener("input", () => {
+      loadCsvTextIntoMapper(csvRawTextarea.value, false);
+    });
+  }
   document.getElementById("btn-run-csv-batch").addEventListener("click", runCsvBatchStandardization);
   document.getElementById("btn-download-csv").addEventListener("click", downloadStandardizedCsv);
 

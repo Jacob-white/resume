@@ -131,6 +131,25 @@ class TestModernFeatures(unittest.TestCase):
         self.assertNotEqual(es_styles["inputBg"], es_styles["inputColor"])
         self.assertTrue(es_styles["sideBySide"], "Entity Standardizer columns must sit side-by-side on desktop")
 
+        # Verify persistent Client CSV Import & Templates banner and downloadable template files
+        self.assertTrue(self.page.locator(".client-csv-banner").is_visible())
+        self.assertTrue(self.page.locator("#btn-quick-upload-csv").is_visible())
+        self.assertTrue(self.page.locator("#btn-quick-sample-csv").is_visible())
+        self.assertTrue(self.page.locator("#btn-header-csv-jump").is_visible())
+        for tpl_name in (
+            "entity_standardizer_crm_template.csv",
+            "entity_standardizer_address_template.csv",
+            "entity_standardizer_phone_template.csv",
+        ):
+            tpl_file = self.repo_root / "entity-standardizer" / "templates" / tpl_name
+            self.assertTrue(tpl_file.exists(), f"Missing template {tpl_name}")
+            self.assertGreaterEqual(len(tpl_file.read_text(encoding="utf-8").strip().splitlines()), 2)
+
+        # Clicking the header CSV jump button switches to Tab 5 and focuses the CSV panel heading
+        self.page.locator("#btn-header-csv-jump").click()
+        self.assertTrue(self.page.locator("#panel-csv").is_visible())
+        self.assertTrue(self.page.locator("#csv-raw-textarea").is_visible())
+
         # Verify Hobby Habit Studio Showcase UI has all 3 interactive capability tabs and readable layout/contrast
         hh_studio_path = self.repo_root / "hobby-habit" / "index.html"
         self.assertTrue(hh_studio_path.exists())

@@ -11,7 +11,7 @@
     <title>Entity Standardizer Studio — Interactive Playground</title>
     <link rel="stylesheet" href="../bootstrap-custom.min.css" />
     <link rel="stylesheet" href="../style.css" />
-    <link rel="stylesheet" href="studio.css" />
+    <link rel="stylesheet" href="studio.css?v=3" />
   </head>
   <body>
     <a href="#studio-main" class="skip-link visually-hidden">Skip to interactive studio</a>
@@ -27,7 +27,14 @@
             </p>
           </div>
         </div>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <button
+            type="button"
+            id="btn-header-csv-jump"
+            class="btn btn-sm btn-outline-light rounded-pill"
+          >
+            CSV Import &amp; Templates
+          </button>
           <span id="engine-status-badge" class="badge rounded-pill studio-status-badge" role="status">
             Checking Engine&hellip;
           </span>
@@ -44,6 +51,52 @@
     </header>
 
     <main id="studio-main" class="container py-4">
+      <!-- Persistent Client CSV Import & Templates Quick-Start Banner -->
+      <section class="client-csv-banner mb-4" aria-labelledby="csv-banner-heading">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge rounded-pill csv-banner-badge">Client Batch Workflow</span>
+              <h2 id="csv-banner-heading" class="h6 fw-bold mb-0">
+                Client CSV Import &amp; Downloadable CSV Templates
+              </h2>
+            </div>
+            <p class="small text-muted mb-0">
+              Download a ready-to-use CSV template for Excel or Google Sheets, or upload your own client <code>.csv</code> file for automatic column mapping, 6-pillar standardization, deduplication, and enriched CSV export.
+            </p>
+          </div>
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            <button type="button" id="btn-quick-upload-csv" class="btn btn-sm btn-custom-primary rounded-pill px-3">
+              Import Client CSV&hellip;
+            </button>
+            <button type="button" id="btn-quick-sample-csv" class="btn btn-sm btn-outline-secondary preset-btn">
+              Try Sample CRM CSV (6 Rows)
+            </button>
+            <a
+              href="templates/entity_standardizer_crm_template.csv"
+              download="entity_standardizer_crm_template.csv"
+              class="btn btn-sm btn-outline-secondary preset-btn"
+            >
+              CRM Contact Template (.csv) &darr;
+            </a>
+            <a
+              href="templates/entity_standardizer_address_template.csv"
+              download="entity_standardizer_address_template.csv"
+              class="btn btn-sm btn-outline-secondary preset-btn"
+            >
+              Address Template (.csv) &darr;
+            </a>
+            <a
+              href="templates/entity_standardizer_phone_template.csv"
+              download="entity_standardizer_phone_template.csv"
+              class="btn btn-sm btn-outline-secondary preset-btn"
+            >
+              Phone Template (.csv) &darr;
+            </a>
+          </div>
+        </div>
+      </section>
+
       <!-- Navigation Tabs -->
       <nav aria-label="Entity Standardizer Capabilities" class="mb-4">
         <div class="studio-tabs" role="tablist">
@@ -100,7 +153,7 @@
             id="tab-csv"
             data-tab="csv"
           >
-            5. Batch CSV Upload &amp; Export
+            5. Batch CSV Import &amp; Templates
           </button>
         </div>
       </nav>
@@ -489,24 +542,55 @@
           <div class="col-lg-4">
             <div class="modern-card h-100">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <h2 class="h5 fw-bold mb-0">Batch CSV Upload &amp; Column Mapper</h2>
+                <h2 id="csv-panel-heading" class="h5 fw-bold mb-0" tabindex="-1">
+                  Batch CSV Upload &amp; Column Mapper
+                </h2>
                 <span class="badge bg-light text-dark border">POST /v1/contact/batch</span>
               </div>
               <p class="small text-muted mb-3">
                 Upload any CRM, address, or contact CSV file (up to 1,000 rows per batch). Columns are auto-mapped to the 6-pillar standardization and deduplication engine.
               </p>
 
+              <div class="mb-3">
+                <span class="form-label small fw-bold text-muted d-block mb-1">
+                  1. Download a Client CSV Template:
+                </span>
+                <div class="d-flex flex-wrap gap-2">
+                  <a
+                    href="templates/entity_standardizer_crm_template.csv"
+                    download="entity_standardizer_crm_template.csv"
+                    class="btn btn-sm btn-outline-secondary preset-btn"
+                  >
+                    Full CRM Template (.csv) &darr;
+                  </a>
+                  <a
+                    href="templates/entity_standardizer_address_template.csv"
+                    download="entity_standardizer_address_template.csv"
+                    class="btn btn-sm btn-outline-secondary preset-btn"
+                  >
+                    Address Template (.csv) &darr;
+                  </a>
+                  <a
+                    href="templates/entity_standardizer_phone_template.csv"
+                    download="entity_standardizer_phone_template.csv"
+                    class="btn btn-sm btn-outline-secondary preset-btn"
+                  >
+                    Phone Template (.csv) &darr;
+                  </a>
+                </div>
+              </div>
+
               <div class="csv-dropzone mb-3" id="csv-dropzone">
                 <label for="csv-file-input" class="csv-dropzone-label">
-                  <span class="fw-bold d-block mb-1">Drop a <code>.csv</code> file here or click to browse</span>
+                  <span class="fw-bold d-block mb-1">2. Drop a <code>.csv</code> file here or click to browse</span>
                   <span class="small text-muted d-block">Supports UTF-8 CSVs with address, company, person, email, or phone columns</span>
                 </label>
                 <input
                   type="file"
                   id="csv-file-input"
+                  name="csv_file"
                   accept=".csv,text/csv"
                   class="form-control mt-2"
-                  aria-label="Upload CSV file for standardization"
                 />
               </div>
 
@@ -517,6 +601,19 @@
                 <button type="button" id="btn-csv-template" class="btn btn-sm btn-outline-secondary preset-btn">
                   Download Sample CSV Template &darr;
                 </button>
+              </div>
+
+              <div class="mb-3">
+                <label for="csv-raw-textarea" class="form-label small fw-bold">
+                  Or Paste / Edit CSV Rows Directly:
+                </label>
+                <textarea
+                  id="csv-raw-textarea"
+                  name="csv_raw_text"
+                  class="form-control font-monospace small"
+                  rows="4"
+                  spellcheck="false"
+                ></textarea>
               </div>
 
               <div id="csv-mapper-box" class="mb-3" hidden>
@@ -556,6 +653,6 @@
       </section>
     </main>
 
-    <script src="studio.js"></script>
+    <script src="studio.js?v=3"></script>
   </body>
 </html>

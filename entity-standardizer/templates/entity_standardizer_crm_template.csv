@@ -1,0 +1,3 @@
+person_name,job_title,organization,email,phone,website,social,street1,street2,city,state,postal_code,country
+"Jane Doe, CFA",Managing Director,"Acme Capital Management, LLC",jane.doe@acmecapital.com,+1 (212) 555-0140 ext. 102,https://www.acmecapital.com,https://www.linkedin.com/in/janedoe,100 Wall Street,Suite 2400,New York,NY,10005,US
+"John A. Smith",VP of Operations,"Global Logistics Corp",jsmith@globallogistics.co.uk,+44 20 7946 0921,https://globallogistics.co.uk,@globallogistics,221B Baker Street,Flat 2,London,,NW1 6XE,GB
